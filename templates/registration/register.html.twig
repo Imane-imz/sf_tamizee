@@ -3,19 +3,25 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="container security-form">
+        <div class="login-form p-5">
+            <h1 class="text-center mb-3">Créer un compte</h1>        
+            {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
+                <label class="mb-2">Prénom</label>
+                {{ form_widget(registrationForm.firstName, {'attr':{'class':'form form-control mb-3','placeholder':'Entrez votre prénom'}}) }}
+                <label class="mb-2">Nom</label>
+                {{ form_widget(registrationForm.lastName, {'attr':{'class':'form form-control mb-3','placeholder':'Entrez votre nom'}}) }}
+                <label class="mb-2">Adresse email</label>
+                {{ form_widget(registrationForm.email, {'attr':{'class':'form form-control mb-3','placeholder':'Entrez votre adresse email'}}) }}
+                <label class="mb-2">Mot de passe</label>
+                {{ form_widget(registrationForm.plainPassword, {'attr':{'class':'form form-control mb-3','placeholder':'Créez un mot de passe'}}) }}
+                <label class="mb-2">Je confirme l'exactitude de mes données</label>
+                {{ form_widget(registrationForm.agreeTerms, {'attr':{'class':'mb-4'}}) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.firstName) }}
-        {{ form_row(registrationForm.lastName) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
 {% endblock %}
