@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div>
+   <h1>Bienvenue {{ app.user.prenom }}</h1>
+</div>
+
+{% if is_granted('ROLE_ADMIN') %}
+{{ include('category/index.html.twig') }}
+
+
+{% endblock %}

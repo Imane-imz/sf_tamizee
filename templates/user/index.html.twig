@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+
+    <h1 class="text-center p-4 mb-5">Utilisateurs Inscrits</h1>
+
+    {% include 'layouts/_flash_messages.html.twig' %}
+
+    <table class="table">
+        <tr>
+            <th>id</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Adresse</th>
+            <th>Numéro de téléphone</th>
+            <th>Commande</th>
+            <th>Action</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.email }}</td>
+                <td>#</td>
+                <td>#</td>
+                <td>#</td>
+                <td>
+                    {% if ('ROLE_ADMIN' in user.roles) == false %}
+                    <a onclick="return confirm('Confirmer la suppression ?')" href="{{ path('app_user_delete', {'id':user.id}) }}" class="btn btn-danger">Supprimer l'utilisateur</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
