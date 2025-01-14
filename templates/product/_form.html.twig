@@ -11,5 +11,9 @@
     <label class="mb-2">Catégorie du produit</label>
     {{ form_widget(form.category, {'attr': {'class':'form form-control mb-4'}}) }}
 
+    <label class="mb-2">Image</label>
+    {{ form_widget(form.image, {'attr': {'class':'form form-control mb-2'}}) }}
+    {{ form_errors(form.image) }}
+
     <button class="btn btn-primary mb-2">{{ button_label|default('Ajouter le produit') }}</button>
 {{ form_end(form) }}
