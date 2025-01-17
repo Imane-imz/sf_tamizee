@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
 
 {% block body %}
 
 <div class="container p-5">
-    <h1 class="text-center">Accueil</h1>
+    <h1 class="text-center">{{ category.name }}</h1>
 
     <div class="row">
     {% for product in products %}
@@ -19,7 +19,7 @@
                 <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
                     <h5 class="card-title">{{ product.name }}</h5>
                 </a>
-                <h4 class="card-text">{{ product.price }} €</h4>
+                <p class="card-text">{{ product.price }} €</p>
                 <a href="#" class="btn btn-success">Ajouter au panier</a>
                 </div>
             </div>

@@ -22,13 +22,27 @@ class HomeController extends AbstractController
     }
 
     #[Route('/product/{id}/show', name: 'app_product_page_show', methods: ['GET'])]
-    public function showProduct(Product $product, ProductRepository $productRepository): Response
+    public function showProduct(Product $product, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
     {
         $lastProducts = $productRepository->findBy([], ['id' => 'DESC'], 4);
 
         return $this->render('home/show.html.twig', [
             'product' => $product,
-            'products' => $lastProducts
+            'products' => $lastProducts,
+            'categories' => $categoryRepository->findAll()
+        ]);
+    }
+
+    #[Route('/product/category/{id}/filter', name: 'app_product_filter', methods: ['GET'])]
+    public function filter($id, CategoryRepository $categoryRepository): Response
+    {
+        $products = $categoryRepository->find($id)->getProducts();
+        $category = $categoryRepository->find($id);
+
+        return $this->render('home/filter.html.twig', [
+            'products' => $products,
+            'category' => $category,
+            'categories' => $categoryRepository->findAll()
         ]);
     }
 }

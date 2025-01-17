@@ -23,7 +23,11 @@
             </tr>
             <tr>
                 <th>Prix</th>
-                <td>{{ product.price }}</td>
+                <td class="h4">{{ product.price }}</td>
+            </tr>
+            <tr>
+                <th>Image de couverture</th>
+                <td><img src="{{ asset('uploads/images/'~product.image) }}" class="card-img-top" style="width: 150px; height: 150px" alt="{{ product.name }}"></td>
             </tr>
         </tbody>
     </table>

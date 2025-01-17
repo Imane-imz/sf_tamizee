@@ -8,23 +8,28 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Accueil</a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="#">Toutes les bougies</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Choix par taille
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Les Minis</a></li>
-            <li><a class="dropdown-item" href="#">Les Petites</a></li>
-            <li><a class="dropdown-item" href="#">Les Moyennes</a></li>
-            <li><a class="dropdown-item" href="#">Les Grandes</a></li>
-          </ul>
-        </li>
+
+        {% if categories is defined %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Choix par taille
+            </a>
+            <ul class="dropdown-menu">
+              {% for category in categories %}
+              <li><a class="dropdown-item" href="{{ path('app_product_filter', {'id': category.id}) }}">{{ category.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endif %}
+
         {% if is_granted('ROLE_ADMIN') %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,15 +42,18 @@
                 </ul>
             </li>
         {% endif %}
+
         {% if app.user %}
         <li class="nav-item">
           <a class="nav-link" href="/logout">Déconnexion</a>
         </li>
+
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="/login">Connexion</a>
         </li>
         {% endif %}
+
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

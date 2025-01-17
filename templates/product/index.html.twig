@@ -16,6 +16,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Stock</th>
+                <th>Image de couverture</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -33,6 +34,7 @@
                         <span class="text-danger">Stock épuisé</span>
                     {% endif %}
                 </td>
+                <td>{{ product.image }}</td>
                 <td>
                     <a href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a> |
                     <a class="text-success" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a> |
