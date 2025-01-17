@@ -8,8 +8,10 @@ use App\Form\AddProductHistoryType;
 use App\Form\ProductEditType;
 use App\Form\ProductType;
 use App\Repository\AddProductHistoryRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +23,18 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository): Response
+    public function index(ProductRepository $productRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $data = $productRepository->findBy([], ['id'=>'DESC']);
+        $products = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            12
+        );
+
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
+            /* 'categories' => $categories */
         ]);
     }
 

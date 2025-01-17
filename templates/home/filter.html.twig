@@ -25,8 +25,14 @@
             </div>
         </div>
 
+    
     {% endfor %}
     </div>
+
+    <div class="m-4">
+        {{ knp_pagination_render(productsbyCategory, 'layouts/pagination.html.twig') }}
+    </div>
+
 </div>
 
 {% endblock %}

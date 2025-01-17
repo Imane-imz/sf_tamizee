@@ -28,5 +28,10 @@
             {% endfor %}
         </table>
         <a class="btn btn-outline-primary m-4" href="{{ path('app_category_new') }}">Ajouter une catégorie</a>
+
+        <div class="m-4">
+            {{ knp_pagination_render(categories, 'layouts/pagination.html.twig') }}
+        </div>
+
     </div>
 {% endblock %}

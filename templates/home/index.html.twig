@@ -8,24 +8,26 @@
     <h1 class="text-center">Accueil</h1>
 
     <div class="row">
-    {% for product in products %}
-
-        <div class="col-md-3 mt-4">
-            <div class="card" style="width: 18rem;">
-                <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
-                    <img src="{{ asset('uploads/images/'~product.image) }}" class="card-img-top" alt="{{ product.name }}">
-                </a>
-                <div class="card-body">
-                <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                </a>
-                <h4 class="card-text">{{ product.price }} €</h4>
-                <a href="#" class="btn btn-success">Ajouter au panier</a>
+        {% for product in products %}
+            <div class="col-md-3 mt-4">
+                <div class="card" style="width: 18rem;">
+                    <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                        <img src="{{ asset('uploads/images/'~product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                    </a>
+                    <div class="card-body">
+                    <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                    </a>
+                    <h4 class="card-text">{{ product.price }} €</h4>
+                    <a href="#" class="btn btn-success">Ajouter au panier</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
+    </div>
 
-    {% endfor %}
+    <div class="m-4">
+        {{ knp_pagination_render(products, 'layouts/pagination.html.twig') }}
     </div>
 </div>
 

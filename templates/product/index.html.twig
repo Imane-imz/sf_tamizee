@@ -49,6 +49,10 @@
         </tbody>
     </table>
 
+    <div class="m-4">
+        {{ knp_pagination_render(products, 'layouts/pagination.html.twig') }}
+    </div>
+
     <a class="btn btn-primary" href="{{ path('app_product_new') }}">Ajouter un nouveau produit</a>
 </div>
 {% endblock %}
