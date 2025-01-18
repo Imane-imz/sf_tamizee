@@ -19,7 +19,7 @@
                         <h5 class="card-title">{{ product.name }}</h5>
                     </a>
                     <h4 class="card-text">{{ product.price }} €</h4>
-                    <a href="#" class="btn btn-success">Ajouter au panier</a>
+                    <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-success">Ajouter au panier</a>
                     </div>
                 </div>
             </div>
