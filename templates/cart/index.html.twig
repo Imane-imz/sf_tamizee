@@ -4,4 +4,47 @@
 
 {% block body %}
 
+<div class="container p-5">
+    <h1 class="text-center m-5">Panier</h1>
+    {% if total > 0 %}
+    <table class="table table-bordered">
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Total pour le produit</th>
+            <th>Action</th>
+        </tr>
+        {% for item in items %}
+            <tr>
+                <td>
+                    <a class="text-decoration-none text-black fw-bold" href="{{ path('app_product_page_show', {'id': item.product.id}) }}">
+                        <img src="{{ asset('uploads/images/'~item.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ item.product.name }}">
+                        {{ item.product.name }}
+                    </a>
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} €</td>
+                <td>{{ item.quantity * item.product.price }} €</td>
+                <td>
+                    <a class="text-danger text-decoration-none" href="{{ path('app_cart_product_remove', {'id':item.product.id}) }}">Retirer le produit du panier</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2 class="mt-5 mb-5">Total : {{ total }} €</h2>
+
+    <div class="row">
+        <a class="col-2 m-lg-2 btn btn-primary" href="">Valider la commande</a>
+        <a class="col-2 m-lg-2 btn btn-danger" href="{{ path('app_cart_remove') }}">Vider le panier</a>
+    </div>
+    {% else %}
+        <p class="text-center">Votre panier est vide, remplissez-le vite !</p>
+        <div class="text-center">
+            <a class="btn btn-primary m-3" href="{{ path('app_home') }}">Voir les produits</a>
+        </div>
+    {% endif %}
+</div>
+
 {% endblock %}
