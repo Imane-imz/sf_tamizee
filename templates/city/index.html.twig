@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Villes de livraison{% endblock %}
+
+{% block body %}
+
+<div class="container p-5">
+    <h1 class="text-center m-5">Villes de livraison</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ville</th>
+                <th>Frais de port</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>{{ city.id }}</td>
+                <td>{{ city.name }}</td>
+                <td>{{ city.shippingFees }} €</td>
+                <td>
+                    <a href="{{ path('app_city_show', {'id': city.id}) }}">Afficher</a> |
+                    <a class="text-success" href="{{ path('app_city_edit', {'id': city.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune ville en base de données.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('app_city_new') }}">Ajouter une ville</a>
+</div>
+    
+{% endblock %}

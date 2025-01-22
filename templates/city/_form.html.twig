@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    <label class="mb-2">Ville</label>
+    {{ form_widget(form.name, {'attr': {'class':'form form-control mb-2'}}) }}
+
+    <label class="mb-2">Frais de port</label>
+    {{ form_widget(form.shippingFees, {'attr': {'class':'form form-control mb-2'}}) }}
+
+    <button class="btn btn-primary mb-2 mt-2">{{ button_label|default('Valider') }}</button>
+{{ form_end(form) }}
