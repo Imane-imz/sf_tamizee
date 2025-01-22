@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+
+<div class="container p-5">
+    <h1 class="text-center m-5">Checkout</h1>
+    <div class="row">
+        <div class="col-8">
+            <h3>Informations client</h3>
+
+            {{ form_start(form) }}
+
+                <label class="mb-2">Prénom</label>
+                {{ form_widget(form.firstName, {'attr': {'class':'form form-control mb-2'}}) }}
+
+                <label class="mb-2">Nom</label>
+                {{ form_widget(form.lastName, {'attr': {'class':'form form-control mb-2'}}) }}
+
+                <label class="mb-2">Numéro de téléphone</label>
+                {{ form_widget(form.phone, {'attr': {'class':'form form-control mb-2'}}) }}
+
+                <label class="mb-2">Adresse</label>
+                {{ form_widget(form.address, {'attr': {'class':'form form-control mb-2'}}) }}
+
+                <label class="mb-2">Ville</label>
+                {{ form_widget(form.city, {'attr': {'class':'form form-control mb-2'}}) }}
+
+                <input class="btn btn-primary mt-2 mb-2" type="submit" value="Continuer">
+
+            {{ form_end(form) }}
+
+        </div>
+        <div class="col-4 text-end">
+            <h3 class="mb-5">Récapitulatif de la commande</h3>
+
+            {% if total > 0 %}
+                <table class="table table-bordered mt-2">
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                    </tr>
+                    {% for item in items %}
+                        <tr>
+                            <td>
+                                <a class="text-decoration-none text-black fw-bold" href="{{ path('app_product_page_show', {'id': item.product.id}) }}">
+                                    <img src="{{ asset('uploads/images/'~item.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ item.product.name }}">
+                                    {{ item.product.name }}
+                                </a>
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.product.price }} €</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <h2 class="mt-3 mb-2">Total : {{ total }} €</h2>
+
+            {% else %}
+                <p class="text-center">Votre panier est vide, remplissez-le vite !</p>
+                <div class="text-center">
+                    <a class="btn btn-primary m-3" href="{{ path('app_home') }}">Voir les produits</a>
+                </div>
+            {% endif %}
+
+            <span>Frais de livraison :</span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
