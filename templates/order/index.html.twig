@@ -56,7 +56,12 @@
                     {% endfor %}
                 </table>
 
-                <h2 class="mt-3 mb-2">Total : {{ total }} €</h2>
+                <span class="mt-3 mb-2">Total du panier :
+                    <h2>
+                        <span class="h2" id="cart-price">{{ total }}</span>
+                        €
+                    </h2>
+                </span>
 
             {% else %}
                 <p class="text-center">Votre panier est vide, remplissez-le vite !</p>
@@ -66,8 +71,59 @@
             {% endif %}
 
             <span>Frais de livraison :</span>
+            <h2>
+                <span class="h2" id="shippingCost"></span>
+                €
+            </h2>
+
+            <span>Montant total :</span>
+            <h2>
+                <span class="total-price"></span>
+                €
+            </h2>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function (){
+        const citySelector = $('#order_form_city'); /* Récupérer la valeur par défaut du champ ville */
+        const cityValue = citySelector.val(); /* Récupérer la valeur par défaut du champ ville */
+
+        const url = `https://127.0.0.1:8000/city/${cityValue}/shipping/cost`; 
+
+        function ajaxRequest(url){
+            $.ajax({
+                url:url,
+                type:'GET',
+                success:function (response){
+                    const newResponse = JSON.parse(response)
+                    if (parseInt(newResponse.status) === 200){
+                        // console.log(newResponse.status)
+                        $("#shippingCost").text(newResponse.content)
+
+                        const cartPrice = parseInt($('#cart-price').text());
+                        const shippingCost = parseInt($('#shippingCost').text());
+
+                        $('.total-price').text(cartPrice+shippingCost);
+                        // console.log(shippingCost)
+                    }
+                },
+                error:function (xhr,status,error){
+
+                }
+            })
+        }
+
+        ajaxRequest(url)
+
+        citySelector.on('change', function (){
+            const urlUpdate = `https://127.0.0.1:8000/city/${$(this).val()}/shipping/cost`;
+            ajaxRequest(urlUpdate)
+        })
+    })
+</script>
 
 {% endblock %}
