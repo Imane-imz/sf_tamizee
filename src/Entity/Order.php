@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -31,6 +33,20 @@ class Order
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?City $city = null;
+
+    /**
+     * @var Collection<int, OrderedProducts>
+     */
+    #[ORM\OneToMany(targetEntity: OrderedProducts::class, mappedBy: '_order', orphanRemoval: true)]
+    private Collection $orderedProducts;
+
+    #[ORM\Column]
+    private ?float $totalPrice = null;
+
+    public function __construct()
+    {
+        $this->orderedProducts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +121,48 @@ class Order
     public function setCity(?City $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderedProducts>
+     */
+    public function getOrderedProducts(): Collection
+    {
+        return $this->orderedProducts;
+    }
+
+    public function addOrderedProduct(OrderedProducts $orderedProduct): static
+    {
+        if (!$this->orderedProducts->contains($orderedProduct)) {
+            $this->orderedProducts->add($orderedProduct);
+            $orderedProduct->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderedProduct(OrderedProducts $orderedProduct): static
+    {
+        if ($this->orderedProducts->removeElement($orderedProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($orderedProduct->getOrder() === $this) {
+                $orderedProduct->setOrder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?float
+    {
+        return $this->totalPrice;
+    }
+
+    public function setTotalPrice(float $totalPrice): static
+    {
+        $this->totalPrice = $totalPrice;
 
         return $this;
     }
