@@ -6,11 +6,21 @@
 
 <div class="container p-5">
     <h1 class="text-center m-5">Commandes</h1>
+    {% include 'layouts/_flash_messages.html.twig' %}
     
     {% for order in orders %}
         <div>
-            <h2 class="mb-3 mt-5">Commande n°{{ order.id }}</h2>
-            <h5>Informations du client</h5>
+            <h2 class="mb-3 mt-5">Commande n°{{ order.id }} - {{ order.createdAt|date("d/m/Y") }}</h2>
+
+            <div class="mb-3">
+                {% if order.isDelivered == true %}
+                    <span class="text-success fw-bold">Commande livrée</span>
+                {% else %}
+                    <span class="text-danger fw-bold">Commande en cours de livraison</span>
+                {% endif %}
+            </div>
+
+            <h6 class="fw-bold">Informations du client</h6>
             <table class="table table-bordered">
                 <tr>
                     <th>Nom</th>
@@ -27,10 +37,9 @@
                     <td>{{ order.city.name }}</td>
                 </tr>
             </table>
-            <h5>Produits commandés</h5>
+            <h6 class="fw-bold">Produits commandés</h6>
             <table class="table table-bordered">
                 <tr>
-                    <th></th>
                     <th>Nom du produit</th>
                     <th>Prix unitaire</th>
                     <th>Quantité</th>
@@ -39,10 +48,11 @@
                 {% for product in order.orderedProducts %}
                     <tr>
                         <td>
-                            <img src="{{ asset('uploads/images/'~product.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ product.product.name }}">
-                            {{ product.product.name }}
+                            <a class="text-decoration-none text-black fw-bold" href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                                <img src="{{ asset('uploads/images/'~product.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ product.product.name }}">
+                                {{ product.product.name }}
+                            </a>
                         </td>
-                        <td><a class="text-decoration-none text-success " href="{{ path('app_product_page_show', {'id': product.id}) }}">{{ product.product.name }}</a></td>
                         <td>{{ product.product.price }} €</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.product.price * product.quantity }} €</td>
@@ -50,7 +60,9 @@
                 {% endfor %}
             </table>
             <h5 class="text-end mb-5">Total de la commande : {{ order.totalPrice }} €</h5>
-            <a href="" class="btn btn-primary  col-2 m-lg-1">Marquer comme livrée</a>
+            {% if order.isDelivered == false %}
+                <a href="{{ path('app_order_is_delivered_update', {'id' : order.id}) }}" class="btn btn-primary  col-2 m-lg-1">Marquer comme livrée</a>
+            {% endif %}
             <hr>
         </div>
     {% endfor %}

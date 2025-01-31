@@ -43,6 +43,9 @@ class Order
     #[ORM\Column]
     private ?float $totalPrice = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isDelivered = null;
+
     public function __construct()
     {
         $this->orderedProducts = new ArrayCollection();
@@ -163,6 +166,18 @@ class Order
     public function setTotalPrice(float $totalPrice): static
     {
         $this->totalPrice = $totalPrice;
+
+        return $this;
+    }
+
+    public function isDelivered(): ?bool
+    {
+        return $this->isDelivered;
+    }
+
+    public function setDelivered(?bool $isDelivered): static
+    {
+        $this->isDelivered = $isDelivered;
 
         return $this;
     }

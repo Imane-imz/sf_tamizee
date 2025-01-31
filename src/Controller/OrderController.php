@@ -87,4 +87,17 @@ class OrderController extends AbstractController
             'orders' => $order,
         ]);
     }
+
+    #[Route('/admin/order/{id}/is-delivered/update', name: 'app_order_is_delivered_update')]
+    public function isDeliveredUpdate($id, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response 
+    {
+        $order = $orderRepository->find($id);
+        $order->setDelivered(true);
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La commande a été livrée.');
+
+        return $this->redirectToRoute('app_order_show');
+    }
 }
