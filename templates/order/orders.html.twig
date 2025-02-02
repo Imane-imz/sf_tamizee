@@ -63,6 +63,7 @@
             {% if order.isDelivered == false %}
                 <a href="{{ path('app_order_is_delivered_update', {'id' : order.id}) }}" class="btn btn-primary  col-2 m-lg-1">Marquer comme livrée</a>
             {% endif %}
+            <a href="{{ path('app_billing', {'id' : order.id}) }}" class="btn btn-outline-primary  col-2 m-lg-1">Imprimer la facture</a>
             <hr>
         </div>
     {% endfor %}
