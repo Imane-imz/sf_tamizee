@@ -48,6 +48,7 @@ class OrderController extends AbstractController
             }
 
             $session->set('cart', []);
+            
             return $this->redirectToRoute('app_order_success');
         }
 

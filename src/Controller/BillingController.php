@@ -18,15 +18,19 @@ class BillingController extends AbstractController
 
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
-        $pdfOptions->set('isRemoteEnabled', true);
+        /* $pdfOptions->set('isRemoteEnabled', true); */
 
         $domPdf = new Dompdf($pdfOptions);
 
-        $logoPath = 'file://' . realpath($this->getParameter('kernel.project_dir') . '/public/images/Logo-Noir-Long.png');
+        /* $logoPath = realpath($this->getParameter('kernel.project_dir') . '/public/uploads/images/Logo-Noir-Long.jpg');
+        if (!$logoPath) {
+            throw new \Exception('Le fichier Logo-Noir-Long.jpg est introuvable.');
+        }
+        $logoPath = 'file://' . $logoPath; */
 
         $html = $this->renderView('billing/index.html.twig', [
             'order' => $order,
-            'logo' => $logoPath
+            /* 'logoPath' => $logoPath */
         ]);
 
         /* echo $html;
