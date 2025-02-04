@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\City;
 use App\Entity\Order;
 use App\Entity\OrderedProducts;
+use App\Entity\User;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
@@ -15,12 +16,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 class OrderController extends AbstractController
 {
+    public function __construct(private MailerInterface $mailer){}
+
     #[Route('/order', name: 'app_order')]
-    public function index(Request $request, SessionInterface $session, ProductRepository $productRepository, EntityManagerInterface $entityManager, Cart $cart): Response
+    public function index(Request $request, SessionInterface $session, EntityManagerInterface $entityManager, Cart $cart): Response
     {
         $data = $cart->getCart($session);
 
@@ -48,7 +53,27 @@ class OrderController extends AbstractController
             }
 
             $session->set('cart', []);
-            
+
+            $html = $this->renderView('emails/orderConfirmation.html.twig', [
+                'order' => $order
+            ]);
+
+            // Récupérer l'utilisateur connecté
+            $user = $this->getUser();
+
+            if (!$user instanceof User) {
+                throw new \Exception("Utilisateur non reconnu.");
+            }
+
+            $email = (new Email())
+                ->from('contact@tamizee.com')
+                ->to($user->getEmail())
+                ->subject('Confirmation de votre commande')
+                ->html($html)
+            ;
+
+            $this->mailer->send($email);
+
             return $this->redirectToRoute('app_order_success');
         }
 

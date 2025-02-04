@@ -36,7 +36,7 @@
     <h2 class="mt-5 mb-5">Total : {{ total }} €</h2>
 
     <div class="row">
-        <a data-turbo="false" class="col-2 m-lg-2 btn btn-primary" href="{{ path('app_order') }}">Continuer</a>
+        <a data-turbo="false" class="col-2 m-lg-2 btn btn-primary" href="{{ app.user ? path('app_order') : path('app_login') }}">Continuer</a>
         <a class="col-2 m-lg-2 btn btn-danger" href="{{ path('app_cart_remove') }}">Vider le panier</a>
     </div>
     {% else %}

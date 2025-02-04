@@ -50,31 +50,14 @@
 <div class="container p-5">
     {# <img src="{{ logoPath }}" alt="Tamizée" style="width: 150px; height: auto;"> #}
 
-    <h1 class="text-center m-5">Facture</h1>
+    <h1 class="text-center m-5">Votre commande a été confirmée !</h1>
+    <p class="text-center m-5">Voter commande est en cours de préparation</p>
     <hr>
 
     <div>
+        <h2 class="text-center m-5">Récapitulatif de la commande</h2>
         <h4 class="text-end mb-5 mt-5">Date de la commande : {{ order.createdAt|date('d M Y') }}</h4>
 
-        <h6 class="fw-bold mt-5 mb-3">Informations du client</h6>
-        <table class="table table-bordered mb-5">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Numéro de téléphone</th>
-                    <th>Adresse</th>
-                    <th>Ville</th>
-                </tr>
-            </thead>
-            <tr>
-                <td>{{ order.firstName }}</td>
-                <td>{{ order.lastName }}</td>
-                <td>{{ order.phone }}</td>
-                <td>{{ order.address }}</td>
-                <td>{{ order.city.name }}</td>
-            </tr>
-        </table>
         <h6 class="fw-bold mb-3">Détails de la commande</h6>
         <table class="table table-bordered mb-5">
             <thead>
@@ -87,6 +70,10 @@
             </thead>
             {% for product in order.orderedProducts %}
                 <tr>
+                    <td>
+                        <img src="{{ asset('uploads/images/'~product.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ product.product.name }}">
+                        {{ product.product.name }}
+                    </td>
                     <td>{{ product.product.name }}</td>
                     <td>{{ product.product.price }} €</td>
                     <td>{{ product.quantity }}</td>
