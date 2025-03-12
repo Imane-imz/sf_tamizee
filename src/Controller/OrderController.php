@@ -8,8 +8,8 @@ use App\Entity\OrderedProducts;
 use App\Entity\User;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
-use App\Repository\ProductRepository;
 use App\Service\Cart;
+use App\Service\StripePayment;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,11 +25,12 @@ class OrderController extends AbstractController
     public function __construct(private MailerInterface $mailer){}
 
     #[Route('/order', name: 'app_order')]
-    public function index(Request $request, SessionInterface $session, EntityManagerInterface $entityManager, Cart $cart): Response
+    public function index(Request $request, SessionInterface $session, EntityManagerInterface $entityManager, Cart $cart, OrderRepository $orderRepository): Response
     {
         $data = $cart->getCart($session);
 
         $order = new Order();
+
         $form = $this->createForm(OrderFormType::class, $order);
         $form->handleRequest($request);
 
@@ -52,27 +53,36 @@ class OrderController extends AbstractController
                 }
             }
 
+            // Vider panier après validation
             $session->set('cart', []);
+
+            // Récupérer l'utilisateur connecté + envoi de l'email
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                throw new \Exception("Utilisateur non reconnu.");
+            }
 
             $html = $this->renderView('emails/orderConfirmation.html.twig', [
                 'order' => $order
             ]);
 
-            // Récupérer l'utilisateur connecté
-            $user = $this->getUser();
-
-            if (!$user instanceof User) {
-                throw new \Exception("Utilisateur non reconnu.");
-            }
-
             $email = (new Email())
                 ->from('contact@tamizee.com')
                 ->to($user->getEmail())
                 ->subject('Confirmation de votre commande')
-                ->html($html)
-            ;
+                ->html($html);
 
             $this->mailer->send($email);
+
+            $payment = new StripePayment();
+
+            $shippingFees = $order->getCity()->getShippingFees();
+
+            $payment->startPayment($data, $shippingFees);
+
+            $stripeRedirectUrl = $payment->getStripeRedirectUrl();
+
+            return $this->redirect($stripeRedirectUrl);
 
             return $this->redirectToRoute('app_order_success');
         }
@@ -81,7 +91,7 @@ class OrderController extends AbstractController
             'form' => $form->createView(),
             'total' =>$data['total'],
             'items' => $data['cart']
-        ]);
+        ]);        
     }
 
     #[Route('/order-success', name: 'app_order_success')]

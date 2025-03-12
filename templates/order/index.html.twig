@@ -10,7 +10,7 @@
         <div class="col-8">
             <h3>Informations client</h3>
 
-            {{ form_start(form) }}
+            {{ form_start(form, {"attr":{'data-turbo':'false'}}) }}
 
                 <label class="mb-2">Prénom</label>
                 {{ form_widget(form.firstName, {'attr': {'class':'form form-control mb-2'}}) }}

@@ -81,7 +81,7 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): float
     {
         return $this->price;
     }
