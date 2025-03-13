@@ -28,3 +28,10 @@ body {
 .page-numbers{
     background: green;
 }
+
+.product-image {
+    width: 300px; /* Fixe la largeur */
+    height: 300px; /* Fixe la hauteur */
+    object-fit: cover; /* Coupe l’image sans la déformer */
+    display: block;
+}

@@ -4,7 +4,9 @@
 
 {% block body %}
 <div class="container security-form">
-    <form method="post" class="login-form p-5">
+    <form method="post" class="login-form p-5" action="{{ path('app_login') }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
@@ -20,10 +22,6 @@
         <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mb-2" autocomplete="email" required autofocus>
         <label for="inputPassword" class="mb-2">Mot de passe</label>
         <input type="password" name="password" id="inputPassword" class="form-control mb-2" autocomplete="current-password" required>
-
-        <input type="hidden" name="_csrf_token"
-            value="{{ csrf_token('authenticate') }}"
-        >
 
         <div class="checkbox mb-3">
             <label>

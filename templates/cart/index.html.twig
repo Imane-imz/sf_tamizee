@@ -19,7 +19,7 @@
             <tr>
                 <td>
                     <a class="text-decoration-none text-black fw-bold" href="{{ path('app_product_page_show', {'id': item.product.id}) }}">
-                        <img src="{{ asset('uploads/images/'~item.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ item.product.name }}">
+                        <img src="{{ item.product.image }}" alt="{{ item.product.name }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;">
                         {{ item.product.name }}
                     </a>
                 </td>

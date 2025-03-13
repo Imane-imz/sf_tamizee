@@ -76,8 +76,11 @@ class OrderController extends AbstractController
 
             $payment = new StripePayment();
 
-            $shippingFees = $order->getCity()->getShippingFees();
+            // Vérifier si la ville est bien définie avant de récupérer les frais de livraison
+            $city = $order->getCity();
+            $shippingFees = $city ? $city->getShippingFees() : 0; // Utiliser 0 si la ville est null
 
+            // Lancer le paiement avec les frais de livraison
             $payment->startPayment($data, $shippingFees);
 
             $stripeRedirectUrl = $payment->getStripeRedirectUrl();

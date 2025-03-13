@@ -34,7 +34,13 @@
                     <td>{{ order.lastName }}</td>
                     <td>{{ order.phone }}</td>
                     <td>{{ order.address }}</td>
-                    <td>{{ order.city.name }}</td>
+                    <td>
+                        {% if order.city %}
+                            {{ order.city.name }}
+                        {% else %}
+                            Pas de ville définie
+                        {% endif %}
+                    </td>
                 </tr>
             </table>
             <h6 class="fw-bold">Produits commandés</h6>
@@ -49,7 +55,7 @@
                     <tr>
                         <td>
                             <a class="text-decoration-none text-black fw-bold" href="{{ path('app_product_page_show', {'id': product.id}) }}">
-                                <img src="{{ asset('uploads/images/'~product.product.image) }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;" alt="{{ product.product.name }}">
+                                <img src="{{ product.product.image }}" alt="{{ product.product.name }}" class="m-2" style="width: 70px; height: 70px; border-radius: 10%;">
                                 {{ product.product.name }}
                             </a>
                         </td>

@@ -20,9 +20,9 @@ class SecurityController extends AbstractController
             $submittedToken = $request->request->get('_csrf_token');
             $serverToken = $csrfTokenManager->getToken('authenticate')->getValue();
         
-            dump('Server Token: ' . $serverToken);
+            /* dump('Server Token: ' . $serverToken);
             dump('Submitted Token: ' . $submittedToken);
-            die;
+            die; */
         
             if ($csrfTokenManager->isTokenValid(new CsrfToken('authenticate', $submittedToken))) {
                 $this->addFlash('success', 'CSRF token is valid!');
@@ -33,7 +33,7 @@ class SecurityController extends AbstractController
 
         // Déboguer pour voir le jeton côté serveur
         $serverToken = $csrfTokenManager->getToken('authenticate')->getValue();
-        dump($serverToken); // Vous pouvez vérifier si ce jeton correspond à celui généré dans votre template.
+        //dump($serverToken); // Vous pouvez vérifier si ce jeton correspond à celui généré dans votre template.
 
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');

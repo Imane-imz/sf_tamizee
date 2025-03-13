@@ -72,7 +72,13 @@
                 <td>{{ order.lastName }}</td>
                 <td>{{ order.phone }}</td>
                 <td>{{ order.address }}</td>
-                <td>{{ order.city.name }}</td>
+                <td>
+                    {% if order.city %}
+                        {{ order.city.name }}
+                    {% else %}
+                        Pas de ville définie
+                    {% endif %}
+                </td>
             </tr>
         </table>
         <h6 class="fw-bold mb-3">Détails de la commande</h6>
