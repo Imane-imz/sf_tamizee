@@ -15,6 +15,12 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        stripe_webhook:
+            pattern: ^/stripe/notification
+            stateless: true  # Pas de session pour les webhooks
+            security: false   # Désactive la sécurité pour éviter les redirections
+
         main:
             lazy: true
             provider: app_user_provider
@@ -31,7 +37,9 @@ security:
                 # where to redirect after logout
                 # target: app_any_route
             entry_point: form_login
-            
+            #require_previous_session: false
+            access_denied_url: null
+
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -52,6 +60,7 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/editor, roles: ROLE_EDITOR }
+        
         
 
 when@test:
