@@ -38,6 +38,7 @@ class OrderController extends AbstractController
             if (!empty($data['total'])){
                 $order->setTotalPrice($data['total']);
                 $order->setCreatedAt(new \DateTimeImmutable());
+                $order->setPaymentCompleted(0);
 
                 $entityManager->persist($order);
                 $entityManager->flush();
@@ -52,9 +53,6 @@ class OrderController extends AbstractController
                     $entityManager->flush();
                 }
             }
-
-            // Vider panier après validation
-            $session->set('cart', []);
 
             // Récupérer l'utilisateur connecté + envoi de l'email
             $user = $this->getUser();
@@ -81,7 +79,7 @@ class OrderController extends AbstractController
             $shippingFees = $city ? $city->getShippingFees() : 0; // Utiliser 0 si la ville est null
 
             // Lancer le paiement avec les frais de livraison
-            $payment->startPayment($data, $shippingFees);
+            $payment->startPayment($data, $shippingFees, $order->getId());
 
             $stripeRedirectUrl = $payment->getStripeRedirectUrl();
 

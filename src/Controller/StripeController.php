@@ -2,17 +2,23 @@
 
 namespace App\Controller;
 
+use App\Repository\OrderRepository;
+use App\Service\Cart;
+use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class StripeController extends AbstractController
 {
     #[Route('/payment/success', name: 'app_stripe_success')]
-    public function success(): Response
+    public function success(Cart $cart, SessionInterface $session): Response
     {
+        $session->set('cart', []);
+        
         return $this->render('stripe/index.html.twig', [
             'controller_name' => 'StripeController',
         ]);
@@ -27,7 +33,7 @@ class StripeController extends AbstractController
     }
 
     #[Route('/stripe/notification', name: 'app_stripe_notification', methods: ['POST'])]
-    public function stripeNotification(Request $request): Response
+    public function stripeNotification(Request $request, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response
     {
         Stripe::setApiKey($_SERVER['STRIPE_SECRET']);
 
@@ -54,8 +60,24 @@ class StripeController extends AbstractController
         switch ($event->type){
             case 'payment_intent.succeeded': //Dans le cas où ça contient l'objet payment_intent
                 $paymentIntent = $event->data->object;
+
                 $filename = __DIR__ . '/public/stripe-details-' . uniqid() . '.txt';
-                file_put_contents($filename, json_encode($paymentIntent));
+
+                $orderId = $paymentIntent->metadata->orderId;
+
+                $order = $orderRepository->find($orderId);
+
+                $cartPrice = $order->getTotalPrice();
+
+                $stripeTotalAmount = $paymentIntent->amount/100;
+
+                if ($cartPrice==$stripeTotalAmount){
+                    $order->setPaymentCompleted(1);
+                    $entityManager->persist($order);
+                    $entityManager->flush();
+                }
+
+                // file_put_contents($filename, json_encode($orderId));
                 break;
             case 'payment_method.attached': //Dans le cas où ça contient l'objet payment_method
                 $paymentMethod = $event->data->object;

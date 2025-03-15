@@ -15,7 +15,7 @@ class StripePayment
         Stripe::setApiVersion('2025-01-27.acacia');
     }
 
-    public function startPayment($cart, $shippingFees)
+    public function startPayment($cart, $shippingFees, $orderId)
     {
         $cartProducts = $cart['cart'];
         $products = [
@@ -68,7 +68,12 @@ class StripePayment
                 'allowed_countries' => ["US", "CA", "GB", "FR", "DE", "IT", "ES", "AU", "BR", "IN", "JP", "CN", "MX", "NL", "SE", 
                                         "CH", "BE", "AT", "DK", "FI", "NO", "IE", "PL", "PT", "RU", "SG", "HK", "KR", "NZ", "ZA"]
             ],
-            'metadata' => [] 
+            'payment_intent_data' => [
+                'metadata' => [
+                    'orderId' => $orderId
+                ] 
+            ]
+            
         ]);
 
         $this->redirectUrl = $session->url;
