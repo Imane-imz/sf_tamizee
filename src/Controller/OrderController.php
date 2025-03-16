@@ -109,10 +109,17 @@ class OrderController extends AbstractController
         return new Response(json_encode(['status' => 200, 'message' => 'ok', 'content' => $cityShippingPrice]));
     }
 
-    #[Route('/admin/order', name: 'app_order_show')]
-    public function getAllOrders(OrderRepository $orderRepository, PaginatorInterface $paginator, Request $request): Response
+    #[Route('/admin/order/{type}/', name: 'app_order_show')]
+    public function getAllOrders($type, OrderRepository $orderRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $data = $orderRepository->findBy([], ['createdAt'=>'DESC']);
+        if ($type == 'is-delivered') {
+            $data = $orderRepository->findBy(['isDelivered'=>1], ['createdAt'=>'DESC']);
+        } elseif ($type == 'is-not-delivered') {
+            $data = $orderRepository->findBy(['isDelivered'=>null], ['createdAt'=>'DESC']);
+        } elseif ($type == 'all-orders') {
+            $data = $orderRepository->findBy([], ['createdAt'=>'DESC']);
+        }
+        
         $order = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
@@ -135,6 +142,6 @@ class OrderController extends AbstractController
 
         $this->addFlash('success', 'La commande a été livrée.');
 
-        return $this->redirectToRoute('app_order_show');
+        return $this->redirectToRoute('app_order_show', ['type'=>'all-orders']);
     }
 }

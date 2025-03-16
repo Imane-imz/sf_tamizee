@@ -39,7 +39,16 @@
                     <li><a class="dropdown-item" href="{{ path('app_category') }}">Catégories</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_product_index') }}">Produits</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_user') }}">Utilisateurs</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_order_show') }}">Commandes</a></li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Commandes
+                      </a>
+                      <ul>
+                        <li><a class="dropdown-item" href="{{ path('app_order_show', {'type':'all-orders'}) }}">Toutes les commandes</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_order_show', {'type':'is-delivered'}) }}">Commandes livrées</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_order_show', {'type':'is-not-delivered'}) }}">Commandes en cours de livraison</a></li>
+                      </ul>
+                    </li>
                 </ul>
             </li>
         {% endif %}
