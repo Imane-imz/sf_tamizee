@@ -69,10 +69,12 @@
         </li>
 
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+
+      <form data-turbo="false" method="GET" action="{{ path('app_search') }}" class="d-flex" role="search">
+        <input name="word" class="form-control me-2" type="search" placeholder="Rechercher" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Rechercher</button>
       </form>
+
     </div>
   </div>
 </nav>
