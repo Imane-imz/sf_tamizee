@@ -8,15 +8,17 @@
 
     {% include 'layouts/_flash_messages.html.twig' %}
 
-    <table class="table">
+     <a class="btn btn-primary mb-3" href="{{ path('app_product_new') }}">Ajouter un nouveau produit</a>
+
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Image principale</th>
+                <th>Nom</th>
                 <th>Description</th>
-                <th>Price</th>
+                <th>Prix</th>
                 <th>Stock</th>
-                <th>Image de couverture</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -24,9 +26,10 @@
         {% for product in products %}
             <tr>
                 <td>{{ product.id }}</td>
+                <td><img src="{{ product.image }}" alt="{{ product.name }}" class="card-img-top" style="width: 50px; height: 50px"></td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.description | slice(0,60) }}...</td>
-                <td>{{ product.price }}</td>
+                <td>{{ product.description | slice(0,50) }}...</td>
+                <td>{{ product.price }} €</td>
                 <td>
                     {% if product.stock > 0 %}
                         {{ product.stock }}
@@ -34,11 +37,10 @@
                         <span class="text-danger">Stock épuisé</span>
                     {% endif %}
                 </td>
-                <td>{{ product.image }}</td>
                 <td>
-                    <a href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a> |
-                    <a class="text-success" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a> |
-                    <a class="text-secondary" href="{{ path('app_product_add_stock', {'id': product.id}) }}">Ajouter du stock</a>
+                    <a class="btn btn-outline-primary" href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a> |
+                    <a class="btn btn-outline-success" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a> |
+                    <a class="btn btn-outline-info" href="{{ path('app_product_add_stock', {'id': product.id}) }}">Ajouter stock</a>
                 </td>
             </tr>
         {% else %}
@@ -52,7 +54,5 @@
     <div class="m-4">
         {{ knp_pagination_render(products, 'layouts/pagination.html.twig') }}
     </div>
-
-    <a class="btn btn-primary" href="{{ path('app_product_new') }}">Ajouter un nouveau produit</a>
 </div>
 {% endblock %}

@@ -13,6 +13,7 @@ use App\Service\StripePayment;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -25,7 +26,7 @@ class OrderController extends AbstractController
     public function __construct(private MailerInterface $mailer){}
 
     #[Route('/order', name: 'app_order')]
-    public function index(Request $request, SessionInterface $session, EntityManagerInterface $entityManager, Cart $cart, OrderRepository $orderRepository): Response
+    public function index(Request $request, SessionInterface $session, EntityManagerInterface $entityManager, Cart $cart, Security $security): Response
     {
         $data = $cart->getCart($session);
 
@@ -40,6 +41,15 @@ class OrderController extends AbstractController
                 $order->setCreatedAt(new \DateTimeImmutable());
                 $order->setPaymentCompleted(0);
 
+                // Récupérer l'utilisateur connecté
+                $user = $security->getUser();
+                if (!$user instanceof User) {
+                    throw new \Exception("Utilisateur non reconnu.");
+                }
+
+                // Associer l'email de l'utilisateur à la commande
+                $order->setEmail($user->getEmail());
+
                 $entityManager->persist($order);
                 $entityManager->flush();
 
@@ -52,38 +62,31 @@ class OrderController extends AbstractController
                     $entityManager->persist($orderedProducts);
                     $entityManager->flush();
                 }
+
+                // Envoi de l'email de confirmation
+                $html = $this->renderView('emails/orderConfirmation.html.twig', [
+                    'order' => $order
+                ]);
+
+                $email = (new Email())
+                    ->from('contact@tamizee.com')
+                    ->to($user->getEmail())
+                    ->subject('Confirmation de votre commande')
+                    ->html($html);
+
+                $this->mailer->send($email);
+
+                // Gestion du paiement Stripe
+                $payment = new StripePayment();
+
+                $city = $order->getCity();
+                $shippingFees = $city ? $city->getShippingFees() : 0; 
+
+                $payment->startPayment($data, $shippingFees, $order->getId());
+                $stripeRedirectUrl = $payment->getStripeRedirectUrl();
+
+                return $this->redirect($stripeRedirectUrl);
             }
-
-            // Récupérer l'utilisateur connecté + envoi de l'email
-            $user = $this->getUser();
-            if (!$user instanceof User) {
-                throw new \Exception("Utilisateur non reconnu.");
-            }
-
-            $html = $this->renderView('emails/orderConfirmation.html.twig', [
-                'order' => $order
-            ]);
-
-            $email = (new Email())
-                ->from('contact@tamizee.com')
-                ->to($user->getEmail())
-                ->subject('Confirmation de votre commande')
-                ->html($html);
-
-            $this->mailer->send($email);
-
-            $payment = new StripePayment();
-
-            // Vérifier si la ville est bien définie avant de récupérer les frais de livraison
-            $city = $order->getCity();
-            $shippingFees = $city ? $city->getShippingFees() : 0; // Utiliser 0 si la ville est null
-
-            // Lancer le paiement avec les frais de livraison
-            $payment->startPayment($data, $shippingFees, $order->getId());
-
-            $stripeRedirectUrl = $payment->getStripeRedirectUrl();
-
-            return $this->redirect($stripeRedirectUrl);
 
             return $this->redirectToRoute('app_order_success');
         }
