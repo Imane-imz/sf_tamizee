@@ -16,7 +16,7 @@
               <h1 class="card-title">{{ product.name }}</h1>
               <p class="card-text">{{ product.description }}</p>
               <p class="card-text h4">{{ product.price }} €</p>
-              <a href="{{ path('app_cart_new', {'id': product.id}) }}">Ajouter au panier</a>
+              <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-primary text-white">Ajouter au panier</a>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
                         <h5 class="card-title">{{ product.name }}</h5>
                     </a>
                     <p class="card-text h4">{{ product.price }} €</p>
-                    <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-success">Ajouter au panier</a>
+                    <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-primary text-white">Ajouter au panier</a>
                     </div>
                 </div>
             </div>

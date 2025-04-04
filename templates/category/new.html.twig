@@ -7,7 +7,16 @@
 <div class="containe security-form">
     <div class="login-form p-5">
         <h2 class="text-center mb-3">Ajouter une catégorie</h2>
-        {{ form_start(form) }}
+
+        {{ form_start(form, {'method': 'POST'}) }}
+
+            {{ form_row(form._token) }}
+
+            {{ dump(form) }}  {# Pour inspecter tout le formulaire #}
+
+{% for error in form.vars.errors %}
+    <div class="alert alert-danger">{{ error.message }}</div>
+{% endfor %}
 
             <label class="mb-2">Catégorie</label>
             {{ form_widget(form.name, {'attr':{'class':'form form-control mb-3','placeholder':'Nom de la catégorie'}}) }}
@@ -15,6 +24,7 @@
             <input type="submit" value="Ajouter" class="btn btn-primary btn-block">
 
         {{ form_end(form) }}
+
     </div>
 </div>
 

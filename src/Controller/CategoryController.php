@@ -36,7 +36,9 @@ class CategoryController extends AbstractController
     {
         $category = new Category();
 
-        $form = $this->createForm(CategoryFormType::class, $category);
+        $form = $this->createForm(CategoryFormType::class, $category, [
+            'csrf_protection' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
@@ -54,10 +56,13 @@ class CategoryController extends AbstractController
     #[Route('/admin/category/{id}/update', name: 'app_category_update')]
     public function updateCategory(Category $category, EntityManagerInterface $entityManager, Request $request) : Response
     {
-        $form = $this->createForm(CategoryFormType::class, $category);
+        $form = $this->createForm(CategoryFormType::class, $category, [
+            'csrf_protection' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+            $entityManager->persist($category);
             $entityManager->flush();
 
             $this->addFlash('success', 'La catégorie a bien été modifiée.');
@@ -68,12 +73,13 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/admin/category/{id}/delete', name: 'app_category_delete')]
-    public function deleteCategory(Category $category, EntityManagerInterface $entityManager) : Response
+    public function deleteCategory(Request $request, Category $category, EntityManagerInterface $entityManager) : Response
     {
-        $entityManager->remove($category);
-        $entityManager->flush();
-
-        $this->addFlash('danger', 'La catégorie a bien été supprimée.');
+        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($category);
+            $entityManager->flush();
+            $this->addFlash('danger', 'La catégorie a bien été supprimée.');
+        }
 
         return $this->redirectToRoute('app_category');
     }

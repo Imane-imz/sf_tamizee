@@ -10,14 +10,10 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Accueil</a>
+          <a class="nav-link" aria-current="page" href="/">Accueil</a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="#">Toutes les bougies</a>
-        </li>
-
-        {% if categories is defined %}
+        {# {% if categories is defined %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Choix par taille
@@ -28,7 +24,7 @@
               {% endfor %}
             </ul>
           </li>
-        {% endif %}
+        {% endif %} #}
 
         {% if is_granted('ROLE_ADMIN') %}
             <li class="nav-item dropdown">
@@ -53,6 +49,10 @@
             </li>
         {% endif %}
 
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/cart">Panier</a>
+        </li>
+
         {% if app.user %}
         <li class="nav-item">
           <a class="nav-link" href="/logout">Déconnexion</a>
@@ -63,10 +63,6 @@
           <a class="nav-link" href="/login">Connexion</a>
         </li>
         {% endif %}
-
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/cart">Panier</a>
-        </li>
 
       </ul>
 
