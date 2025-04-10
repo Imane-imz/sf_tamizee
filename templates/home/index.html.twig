@@ -4,8 +4,125 @@
 
 {% block body %}
 
-<div class="container p-5">
-    <h1 class="text-center">Accueil</h1>
+{# Bannière principale #}
+<div class="hero-banner d-flex align-items-center text-white text-center">
+    <div class="container content">
+        <h1 class="display-3 fw-bold">Buy Buy Buy</h1>
+        <p class="lead">Vos envies, livrées chez vous.</p>
+
+        <a href="#" class="btn btn-primary btn-lg mt-3 disabled" tabindex="-1" aria-disabled="true">Voir nos produits</a>
+
+    </div>
+</div>
+
+{# Carousel #}
+<div class="container my-5">
+    <h2 class="h2 text-center m-5">Nos Produits Phares</h2>
+
+    <div id="featuredProductsCarousel" class="mt-5 carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for row in featuredProducts|batch(3, '') %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <div class="row justify-content-center">
+                        {% for product in row %}
+                            {% if product %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                                            <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                                        </a>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ product.name }}</h5>
+                                            <p class="card-text">{{ product.description|slice(0, 100) ~ '...' }}</p>
+                                            <p class="fw-bold">{{ product.price }} €</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-black rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-black rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+</div>
+
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-4">Nos Catégories</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <a href="{{ path('app_category_show', {id: category.id}) }}">
+                        <img src="{{ asset('uploads/categories/' ~ category.image) }}" class="card-img-top" alt="{{ category.name }}">
+                        <div class="card-body text-center">
+                            <h5 class="btn btn-outline-primary">{{ category.name }}</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+{# <div class="review-banner d-flex align-items-center  text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold">Ce que nos clients disent</h1>
+
+        <a href="#" class="btn btn-primary btn-lg mt-3 disabled" tabindex="-1" aria-disabled="true">Voir tous les avis</a>
+
+    </div>
+</div> #}
+
+{# Avis #}
+{# <div class="container my-5">
+    <h2 class="text-center mb-4">Avis</h2>
+    <div class="row justify-content-center">
+        {% for review in reviews %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review.username }}</h5>
+                        <p class="card-text">{{ review.comment }}</p>
+                        <p>
+                            {% for i in 1..5 %}
+                                {% if i <= review.rating %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                        <small class="text-muted">{{ review.createdAt|date('d/m/Y') }}</small>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucun avis pour le moment.</p>
+        {% endfor %}
+        <div class="text-center">
+             <a href="#" class="btn btn-primary btn-lg mt-3 disabled" tabindex="-1" aria-disabled="true">Laisser un avis</a>
+        </div>
+    </div>
+</div> #}
+
+
+
+
+{# <div class="container p-5">
+    <h1 class="text-center test">Accueil</h1>
 
     <div class="row">
         {% for product in products %}
@@ -29,6 +146,6 @@
     <div class="m-4">
         {{ knp_pagination_render(products, 'layouts/pagination.html.twig') }}
     </div>
-</div>
+</div> #}
 
 {% endblock %}

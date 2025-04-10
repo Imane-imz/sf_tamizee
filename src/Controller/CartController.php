@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\Cart;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,16 +38,19 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart/add/{id}/', name: 'app_cart_new', methods: ['GET'])]
-    public function addToCart(int $id, SessionInterface $session): Response
+    public function addToCart(int $id, SessionInterface $session, Request $request, Product $product): Response
     {
         $cart = $session->get('cart', []);
-        if (!empty($cart[$id])){
-            $cart[$id] ++;
+        $quantity = $request->query->getInt('quantity', 1); // ← ici la quantité est lue depuis l'URL
+
+        if (isset($cart[$product->getId()])) {
+            $cart[$product->getId()] += $quantity;
         } else {
-            $cart[$id] = 1;
+            $cart[$product->getId()] = $quantity;
         }
 
         $session->set('cart', $cart);
+        $this->addFlash('success', 'Produit ajouté au panier');
 
 
         return $this->redirectToRoute('app_cart');

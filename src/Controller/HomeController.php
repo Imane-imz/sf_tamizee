@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ReviewRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET'])]
-    public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository, Request $request, PaginatorInterface $paginator, ReviewRepository $reviewRepository): Response
     {
         $data = $productRepository->findBy([], ['id'=>'DESC']);
         $products = $paginator->paginate(
@@ -23,9 +24,18 @@ class HomeController extends AbstractController
             12
         );
 
+        $featuredProducts = $productRepository->findBy(['isFeatured' => true]);
+
+        $reviews = $reviewRepository->findBy([], ['createdAt' => 'DESC'], 3);
+
+        $categories = $categoryRepository->findAll();
+
         return $this->render('home/index.html.twig', [
             'products' => $products,
-            'categories' => $categoryRepository->findAll()
+            'categories' => $categoryRepository->findAll(),
+            'featuredProducts' => $featuredProducts,
+            'reviews' => $reviews,
+            'categories' => $categories
         ]);
     }
 

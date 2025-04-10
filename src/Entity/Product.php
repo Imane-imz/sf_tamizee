@@ -46,6 +46,9 @@ class Product
     #[ORM\OneToMany(targetEntity: OrderedProducts::class, mappedBy: 'product')]
     private Collection $orderedProducts;
 
+    #[ORM\Column(nullable: false)]
+    private ?bool $isFeatured = null;
+
     public function __construct()
     {
         $this->addProductHistories = new ArrayCollection();
@@ -185,6 +188,18 @@ class Product
                 $orderedProduct->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isFeatured(): ?bool
+    {
+        return $this->isFeatured;
+    }
+
+    public function setFeatured(bool $isFeatured): static
+    {
+        $this->isFeatured = $isFeatured;
 
         return $this;
     }

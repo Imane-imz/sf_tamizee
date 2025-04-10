@@ -1,3 +1,63 @@
+.hero-banner {
+    position: relative;
+    background-image: url('/uploads/images/Sale.jpg'); /* Remplace par ton image */
+    background-size: cover;
+    background-position:top;
+    background-repeat: no-repeat;
+    min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
+}
+
+.hero-banner::after {
+    content: ''; /* Nécessaire pour afficher le pseudo-élément */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Couleur noire avec une transparence de 50% */
+    z-index: 1; /* Place l'overlay au-dessus de l'image */
+}
+
+.hero-banner .content {
+    position: relative;
+    z-index: 2; /* Assure-toi que le texte reste au-dessus de l'overlay */
+    color: white; /* Pour rendre le texte blanc */
+    text-align: center;
+    padding: 20px;
+}
+
+.review-banner {
+    background-image: url('/uploads/images/Avis.jpg'); /* Remplace par ton image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
+}
+
+/* Déplace les boutons à l'extérieur du carousel */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-control-prev {
+    left: -70px; /* recule la flèche gauche */
+}
+
+.carousel-control-next {
+    right: -70px; /* avance la flèche droite */
+}
+
+/* Taille des icônes */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+
 body {
     background-color: white;
 }

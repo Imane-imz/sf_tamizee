@@ -2,6 +2,8 @@ import './styles/_custom.scss';
 import './bootstrap.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import "./styles/app.css";
+
 
 /*
  * Welcome to your app's main JavaScript file!

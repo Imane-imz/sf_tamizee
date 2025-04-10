@@ -21,7 +21,8 @@ class ProductFixtures extends Fixture
                     ->setDescription($faker->text(200))
                     ->setPrice($faker->randomFloat(2, 10, 100))
                     ->setStock($faker->numberBetween(1, 100))
-                    ->setImage("https://picsum.photos/seed/".md5($product->getName())."/640/480");
+                    ->setImage("https://picsum.photos/seed/".md5($product->getName())."/640/480")
+                    ->setFeatured($faker->boolean(30));
 
             $manager->persist($product);
         }
