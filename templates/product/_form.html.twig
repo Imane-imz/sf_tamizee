@@ -14,9 +14,12 @@
     <label class="mb-2">Quantité en stock</label>
     {{ form_widget(form.stock, {'attr': {'class':'form form-control mb-2'}}) }}
 
-    <label class="mb-2">Image</label>
+    <label class="mb-2">Image principale</label>
     {{ form_widget(form.image, {'attr': {'class':'form form-control mb-4'}}) }}
     {{ form_errors(form.image) }}
+
+    <label class="mb-2">Images secondaires</label>
+    {{ form_row(form.images, {'attr': {'class':'form form-control mb-4'}}) }}
 
     <button class="btn btn-primary mb-2">{{ button_label|default('Ajouter le produit') }}</button>
 {{ form_end(form) }}

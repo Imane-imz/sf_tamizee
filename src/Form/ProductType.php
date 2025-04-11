@@ -26,7 +26,7 @@ class ProductType extends AbstractType
                 'label' => 'Catégorie'
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image',
+                'label' => 'Images du produit',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
@@ -42,6 +42,12 @@ class ProductType extends AbstractType
                     ])
                 ]
             ])
+            ->add('images', FileType::class, [
+                'label' => 'Galerie d’images',
+                'mapped' => false,
+                'multiple' => true,
+                'required' => false,
+            ]);
         ;
     }
 

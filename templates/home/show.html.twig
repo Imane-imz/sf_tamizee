@@ -10,12 +10,21 @@
     <div class="row">
         <!-- Images -->
         <div class="col-md-6">
-            <img src="{{ product.image }}" class="img-fluid mb-3 rounded" id="mainImage" alt="{{ product.name }}">
+            {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+            <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top rounded">
             
             {# Miniatures #}
+            {% for image in product.productImages %}
+                {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top" style="width: 150px; height: 150px">
+            {% endfor %}
+
             <div class="d-flex gap-2 mt-3">
-                <img src="{{ product.image }}" class="img-thumbnail" style="width: 80px; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src">
-                {# Ajouter ici d'autres miniatures si besoin #}
+                  {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                  <img src="{{ imagePath }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 80px; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src">
+
+                  {# <img src="{{ asset('uploads/images/' ~ product.image) }}" class="img-thumbnail" style="width: 80px; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src"> #}
+                  {# Ajouter ici d'autres miniatures si besoin #}
             </div>
         </div>
 
@@ -83,7 +92,8 @@
             <div class="col-md-3 mt-4">
                 <div class="card" style="width: 18rem;">
                     <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
-                        <img src="{{ product.image }}" alt="{{ product.name }}" class="card-img-top">
+                        {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                        <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top rounded">
                     </a>
                     <div class="card-body">
                     <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">

@@ -27,7 +27,11 @@
             </tr>
             <tr>
                 <th>Image de couverture</th>
-                <td><img src="{{ product.image }}" alt="{{ product.name }}" class="card-img-top" style="width: 150px; height: 150px"></td>
+                <td>
+                    {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                    <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top" style="width: 150px; height: 150px">
+
+                </td>
             </tr>
         </tbody>
     </table>

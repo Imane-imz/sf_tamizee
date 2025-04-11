@@ -26,7 +26,10 @@
         {% for product in products %}
             <tr>
                 <td>{{ product.id }}</td>
-                <td><img src="{{ product.image }}" alt="{{ product.name }}" class="card-img-top" style="width: 50px; height: 50px"></td>
+                <td>
+                    {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                    <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top" style="width: 50px; height: 50px">    
+                </td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description | slice(0,50) }}...</td>
                 <td>{{ product.price }} €</td>

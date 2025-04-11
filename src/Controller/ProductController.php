@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AddProductHistory;
 use App\Entity\Product;
+use App\Entity\ProductImage;
 use App\Form\AddProductHistoryType;
 use App\Form\ProductEditType;
 use App\Form\ProductType;
@@ -46,33 +47,61 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $image = $form->get('image')->getData();
-
-            if ($image) {
-                $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            // 📌 Image principale
+            $mainImage = $form->get('image')->getData();
+            if ($mainImage) {
+                $originalName = pathinfo($mainImage->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalName);
-                $newFileName = $safeFileName.'-'.uniqid().'.'.$image->guessExtension();
-
+                $newFileName = $safeFileName.'-'.uniqid().'.'.$mainImage->guessExtension();
+    
                 try {
-                    $image->move(
+                    $mainImage->move(
                         $this->getParameter('image_dir'),
                         $newFileName
                     );
-                } catch(FileException $exception) {}
-                
-                $product->setImage($newFileName);
+                } catch(FileException $exception) {
+                    // log error
+                }
+    
+                $product->setImage($newFileName); // image principale
             }
-
+    
+            // 📸 Galerie d’images
+            $galleryImages = $form->get('images')->getData();
+    
+            foreach ($galleryImages as $imageFile) {
+                $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFileName = $slugger->slug($originalName);
+                $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
+    
+                try {
+                    $imageFile->move(
+                        $this->getParameter('image_dir'),
+                        $newFileName
+                    );
+                } catch(FileException $exception) {
+                    // log error
+                }
+    
+                $productImage = new ProductImage();
+                $productImage->setImagePath($newFileName);
+                $productImage->setProduct($product);
+    
+                $entityManager->persist($productImage);
+            }
+    
+            // 🔐 Enregistrer le produit
             $entityManager->persist($product);
             $entityManager->flush();
-
+    
+            // 🕓 Historique
             $stockHistory = new AddProductHistory();
             $stockHistory->setQuantity($product->getStock());
             $stockHistory->setProduct($product);
             $stockHistory->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($stockHistory);
             $entityManager->flush();
-
+    
             $this->addFlash('success', 'Le produit a bien été ajouté.');
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }

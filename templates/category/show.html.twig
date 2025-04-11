@@ -10,7 +10,8 @@
         {% for product in products %}
             <div class="col-md-4">
                 <div class="card mb-4">
-                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                    {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                    <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.price }} €</p>
