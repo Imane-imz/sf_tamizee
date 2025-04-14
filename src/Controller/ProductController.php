@@ -127,9 +127,8 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Image principale
             $image = $form->get('image')->getData();
-
             if ($image) {
                 $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalName);
@@ -140,10 +139,47 @@ final class ProductController extends AbstractController
                         $this->getParameter('image_dir'),
                         $newFileName
                     );
-                } catch(FileException $exception) {}
-                
+                } catch(FileException $exception) {
+                    // Tu peux logguer l'erreur si besoin
+                }
+
                 $product->setImage($newFileName);
             }
+
+            // Images supplémentaires
+            foreach ($form->get('productImages') as $key => $productImageForm) {
+                $imageFile = $productImageForm->get('imageFile')->getData();
+                $delete = $productImageForm->get('delete')->getData();
+                $productImageEntity = $product->getProductImages()[$key] ?? null;
+            
+                if ($imageFile && $productImageEntity) {
+                    // Supprimer l'ancienne image physique si tu veux
+                    $oldImagePath = $productImageEntity->getImagePath();
+                    if ($oldImagePath) {
+                        @unlink($this->getParameter('image_dir') . '/' . $oldImagePath);
+                    }
+            
+                    // Upload de la nouvelle image
+                    $originalName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFileName = $slugger->slug($originalName);
+                    $newFileName = $safeFileName.'-'.uniqid().'.'.$imageFile->guessExtension();
+            
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('image_dir'),
+                            $newFileName
+                        );
+                    } catch(FileException $exception) {}
+            
+                    $productImageEntity->setImagePath($newFileName);
+                    $productImageEntity->setProduct($product); // au cas où
+                }
+            
+                if ($delete && $productImageEntity) {
+                    // Supprimer l’image de la BDD et potentiellement du disque
+                    $entityManager->remove($productImageEntity);
+                }
+            }            
 
             $entityManager->flush();
 

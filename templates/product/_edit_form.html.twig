@@ -15,5 +15,22 @@
     {{ form_widget(form.image, {'attr': {'class':'form form-control mb-4'}}) }}
     {{ form_errors(form.image) }}
 
+    <h5 class="mt-3">Images supplémentaires</h5>
+
+    {% for imageForm in form.productImages %}
+        <div class="row mb-3 border p-2 rounded bg-light">
+            <div class="col">
+                {% if product.productImages[loop.index0] is defined %}
+                    <img src="{{ asset('uploads/images/' ~ product.productImages[loop.index0].imagePath) }}" alt="Image" class="mb-4 rounded" style="max-height: 100px;">
+                {% endif %}
+
+                {{ form_widget(imageForm.imageFile, {'attr': {'class':'form form-control mb-4'}}) }}
+
+                <label>Supprimer cette image</label>
+                {{ form_widget(imageForm.delete) }}
+            </div>
+        </div>
+    {% endfor %}
+
     <button class="btn btn-primary mb-2">{{ button_label|default('Ajouter le produit') }}</button>
 {{ form_end(form) }}

@@ -12,23 +12,54 @@
         <div class="col-md-6">
             {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
             <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top rounded">
-            
-            {# Miniatures #}
-            {% for image in product.productImages %}
-                {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
-                <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top" style="width: 150px; height: 150px">
-            {% endfor %}
 
-            <div class="d-flex gap-2 mt-3">
-                  {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
-                  <img src="{{ imagePath }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 80px; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src">
 
-                  {# <img src="{{ asset('uploads/images/' ~ product.image) }}" class="img-thumbnail" style="width: 80px; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src"> #}
-                  {# Ajouter ici d'autres miniatures si besoin #}
+
+            <div class="row mt-4">
+                {% for image in product.productImages %}
+                    {% set imagePath = image.imagePath starts with 'http' ? image.imagePath : asset('uploads/images/' ~ image.imagePath) %}
+                    <div class="col-3">
+                        <img src="{{ imagePath }}" 
+                            class="img-thumbnail gallery-image"
+                            alt="Image additionnelle" 
+                            style="cursor: zoom-in; width: 100px; height: 100px; object-fit: cover;"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#imageModal" 
+                            data-img-url="{{ imagePath }}">
+                    </div>
+                {% endfor %}
             </div>
+
+
+            <!-- Modale Bootstrap pour l'affichage -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                    <div class="modal-body">
+                        {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
+                        <img src="{{ imagePath }}" id="modalImage" class="img-fluid" alt="Image en grand">
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const modalImage = document.getElementById("modalImage");
+                    const galleryImages = document.querySelectorAll(".gallery-image");
+
+                    galleryImages.forEach(img => {
+                        img.addEventListener("click", function () {
+                            const url = this.dataset.imgUrl;
+                            modalImage.src = url;
+                        });
+                    });
+                });
+            </script>
+            
         </div>
 
-        <!-- Détails du -->
+        <!-- Détails du produit -->
         <div class="col-md-6">
             <h2>{{ product.name }}</h2>
             <h4 class="fw-bold">{{ product.price }} €</h4>
@@ -68,22 +99,6 @@
     }
 </script>
 
-    {# <div class="card mb-12 p-4 mb-4">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="{{ product.image }}" alt="{{ product.name }}" class="img-fluid rounded">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h1 class="card-title">{{ product.name }}</h1>
-              <p class="card-text">{{ product.description }}</p>
-              <p class="card-text h4">{{ product.price }} €</p>
-              <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-primary text-white">Ajouter au panier</a>
-            </div>
-          </div>
-        </div>
-    </div> #}
-
     <h4 class="text-center">Vous pourriez aussi aimer...</h4>
 
     <div class="row">
@@ -93,7 +108,7 @@
                 <div class="card" style="width: 18rem;">
                     <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
                         {% set imagePath = product.image starts with 'http' ? product.image : asset('uploads/images/' ~ product.image) %}
-                        <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top rounded">
+                        <img src="{{ imagePath }}" alt="{{ product.name }}" class="card-img-top rounded" style="height: 200px; object-fit: cover;">
                     </a>
                     <div class="card-body">
                     <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
