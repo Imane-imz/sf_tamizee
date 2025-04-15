@@ -27,9 +27,18 @@ class CategoryController extends AbstractController
             12
         );
 
-       /*  $categories = $categoryRepository->findAll();
- */
+       /*  $categories = $categoryRepository->findAll(); */
         return $this->render('category/index.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
+    #[Route('/categories', name: 'app_category_list')]
+    public function list(CategoryRepository $categoryRepository): Response
+    {
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('category/category_landing.html.twig', [
             'categories' => $categories
         ]);
     }

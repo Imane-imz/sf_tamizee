@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos catégories{% endblock %}
+
+{% block body %}
+{# Bannière catégories #}
+<div class="category-banner d-flex align-items-center text-white text-center">
+    <div class="container content">
+        <h1 class="display-3 fw-bold">Toutes les catégories</h1>
+    </div>
+</div>
+
+<div class="container my-5">
+
+    <div class="row">
+        {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="{{ path('app_category_show', {id: category.id}) }}">
+                        <img src="{{ asset('uploads/categories/' ~ category.image) }}" class="card-img-top" alt="{{ category.name }}">
+                    </a>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <a href="{{ path('app_category_show', {id: category.id}) }}" class="btn btn-outline-primary">Voir produits</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Aucune catégorie disponible.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

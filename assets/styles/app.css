@@ -34,6 +34,22 @@
     min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
 }
 
+.category-banner {
+    background-image: url('/uploads/images/Avis.jpg'); /* Remplace par ton image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
+}
+
+.product-banner {
+    background-image: url('/uploads/images/Avis.jpg'); /* Remplace par ton image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
+}
+
 /* Déplace les boutons à l'extérieur du carousel */
 .carousel-control-prev,
 .carousel-control-next {

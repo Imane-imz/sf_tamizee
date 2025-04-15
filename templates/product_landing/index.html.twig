@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les Produits{% endblock %}
+
+{% block body %}
+{# Bannière produits #}
+<div class="product-banner d-flex align-items-center text-white text-center">
+    <div class="container content">
+        <h1 class="display-3 fw-bold">Boutique</h1>
+    </div>
+</div>
+<div class="container p-5">
+
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3 mt-4">
+                <div class="card" style="width: 18rem;">
+                    <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                        <img src="{{ product.image }}" alt="{{ product.name }}" class="img-thumbnail">
+                    </a>
+                    <div class="card-body">
+                        <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                        </a>
+                        <h4 class="card-text">{{ product.price }} €</h4>
+                        <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-primary text-white">Ajouter au panier</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="m-4">
+        {{ knp_pagination_render(products, 'layouts/pagination.html.twig') }}
+    </div>
+</div>
+{% endblock %}

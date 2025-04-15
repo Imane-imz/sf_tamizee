@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Repository\OrderRepository;
 use App\Service\Cart;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
+use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class StripeController extends AbstractController
 {
@@ -88,5 +91,37 @@ class StripeController extends AbstractController
         }
 
         return new Response('Evénement reçu: ' . $event->type, 200);
+    }
+
+    #[Route('/checkout/{id}', name: 'app_checkout', methods: ['POST'])]
+    public function checkout(Product $product, Request $request): Response
+    {
+        \Stripe\Stripe::setApiKey($_SERVER['STRIPE_SECRET']);
+
+        $quantity = $request->request->get('quantity', 1);
+
+        // Sécurité minimale
+        if ($quantity < 1) {
+            $quantity = 1;
+        }
+
+        $checkoutSession = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $product->getName(),
+                    ],
+                    'unit_amount' => $product->getPrice() * 100,
+                ],
+                'quantity' => $quantity,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('app_stripe_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancel_url' => $this->generateUrl('app_stripe_cancellation', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+
+        return $this->redirect($checkoutSession->url);
     }
 }
