@@ -12,20 +12,28 @@ RUN a2enmod rewrite
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Définit le DocumentRoot Apache vers /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+
+# Modifie la config Apache pour utiliser le nouveau DocumentRoot
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+
 # Copie le projet dans le conteneur
 COPY . /var/www/html/
 
-# Définit le dossier public comme racine du serveur
-WORKDIR /var/www/html
+# Donne les bons droits
 RUN chown -R www-data:www-data /var/www/html
 
-# Installe les dépendances
-RUN composer install --no-dev --optimize-autoloader
+# Installe les dépendances (et corrige les erreurs root + symfony/runtime)
+RUN composer install --no-dev --optimize-autoloader \
+    && composer require symfony/runtime
 
-# Configuration Apache pour Symfony
+# Configuration Apache supplémentaire (permissions dossier public)
 RUN echo '<Directory /var/www/html/public>\n\
     AllowOverride All\n\
-</Directory>' > /etc/apache2/conf-available/symfony.conf && a2enconf symfony
+    Require all granted\n\
+</Directory>' > /etc/apache2/conf-available/symfony.conf \
+    && a2enconf symfony
 
 # Port exposé
 EXPOSE 80
