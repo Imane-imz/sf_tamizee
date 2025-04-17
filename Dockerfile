@@ -23,10 +23,9 @@ RUN chown -R www-data:www-data /var/www/html
 RUN composer install --no-dev --optimize-autoloader
 
 # Configuration Apache pour Symfony
-RUN echo '<Directory /var/www/html/public>
-    AllowOverride All
-</Directory>' > /etc/apache2/conf-available/symfony.conf \
-    && a2enconf symfony
+RUN echo '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+</Directory>' > /etc/apache2/conf-available/symfony.conf && a2enconf symfony
 
 # Port exposé
 EXPOSE 80
