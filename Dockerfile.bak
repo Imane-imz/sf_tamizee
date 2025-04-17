@@ -29,6 +29,9 @@ WORKDIR /var/www/html/
 # Installe les dépendances
 RUN composer install --no-dev --optimize-autoloader
 
+RUN ls -l /var/www/html/vendor/ > /tmp/vendor_contents.txt
+
+
 # Configuration Apache supplémentaire (permissions dossier public)
 RUN echo '<Directory /var/www/html/public>\n\
     AllowOverride All\n\
