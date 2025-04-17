@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: tamizee
+    env: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: ""
