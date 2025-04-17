@@ -1,16 +1,11 @@
+// Styles SCSS/CSS
 import './styles/_custom.scss';
-import './bootstrap.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import "./styles/app.css";
-
-
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// Si tu veux Bootstrap :
+// import 'bootstrap/dist/js/bootstrap.bundle.min';
+
+// Stimulus uniquement si tu en as besoin
+// import './bootstrap.js';
+
+console.log('This log comes from assets/app.js - welcome to Webpack Encore! 🎉');

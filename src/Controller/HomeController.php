@@ -44,10 +44,13 @@ class HomeController extends AbstractController
     {
         $lastProducts = $productRepository->findBy([], ['id' => 'DESC'], 4);
 
+        $reviews = $product->getReviews();
+
         return $this->render('home/show.html.twig', [
             'product' => $product,
             'products' => $lastProducts,
-            'categories' => $categoryRepository->findAll()
+            'categories' => $categoryRepository->findAll(),
+            'reviews' => $reviews
         ]);
     }
 

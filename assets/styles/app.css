@@ -111,3 +111,35 @@ body {
     object-fit: cover; /* Coupe l’image sans la déformer */
     display: block;
 }
+
+.star {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    color: gold;
+    margin-right: 2px;
+}
+
+.star.empty {
+    color: lightgray;
+}
+
+.review-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    background-color: white;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.review-grid > div {
+    flex: 1 1 calc(33.33% - 20px);
+    box-sizing: border-box;
+}

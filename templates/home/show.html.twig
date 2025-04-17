@@ -6,7 +6,7 @@
 
 <div class="container p-5">
 
-<div class="container py-5">
+<div class="container py-5 mb-5">
     <div class="row">
         <!-- Images -->
         <div class="col-md-6">
@@ -114,6 +114,49 @@
 
 
 </script>
+
+<h2 class="text-xl font-bold mt-6 mb-5 text-center">Avis</h2>
+
+<div class="text-center">
+    {% if app.user %}
+        <a href="{{ path('review_new', { productId: product.id }) }}"
+        class="btn btn-outline-primary mb-4">
+            Laisser un avis
+        </a>
+    {% else %}
+        <p class="text-sm text-gray-600 mb-4">
+            <a href="{{ path('app_login') }}" class="underline text-blue-600 hover:text-blue-800">Connectez-vous</a> pour laisser un avis.
+        </p>
+    {% endif %}
+</div>
+
+
+{% if reviews|length == 0 %}
+    <p>Aucun avis pour le moment.</p>
+{% else %}
+    <div class="review-grid mb-5 text-center">
+        {% for review in reviews %}
+            <div class="review-card">
+                <div class="stars mb-3">
+                    {% for i in 1..5 %}
+                        {% if i <= review.rating %}
+                            <span class="star">★</span>
+                        {% else %}
+                            <span class="star empty">★</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="mb-3">{{ review.comment }}</p>
+                <p class="text-sm text-gray-500">Par {{ review.authorName ?? 'Anonyme' }}, le {{ review.createdAt|date('d/m/Y') }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endif %}
+
+
+
+
 
     <h4 class="text-center">Vous pourriez aussi aimer...</h4>
 

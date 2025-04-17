@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laisser un avis{% endblock %}
+
+{% block body %}
+
+<div class="container p-5">
+    <h1 class="mb-4">Laisser un avis pour {{ product.name }}</h1>
+
+    {{ form_start(form, {'attr': {'id': 'review-form'}}) }}
+
+    <div class="mb-3">
+        <label>Votre note :</label>
+        <div id="star-rating" style="font-size: 2rem; cursor: pointer;">
+            {% for i in 1..5 %}
+                <span class="star" data-value="{{ i }}">&#9734;</span>
+            {% endfor %}
+        </div>
+
+        {# ⚠️ Champ caché avec name explicite pour JS #}
+        {{ form_widget(form.rating, {'attr': {'type': 'hidden', 'id': 'review_rating'}}) }}
+    </div>
+
+    <div id="rating-error" style="color: red; display: none; margin-top: 5px;">
+        Merci de sélectionner une note.
+    </div>
+
+    <div class="mb-3">
+        <label class="mb-2">Votre avis</label>
+        {{ form_widget(form.comment, {'attr': {'class':'form form-control mb-2'}}) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submit-review">Envoyer</button>
+
+    {{ form_row(form._token) }}
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+<script>
+    const stars = document.querySelectorAll('#star-rating .star');
+    const ratingInput = document.querySelector('#review_rating');
+    const ratingError = document.getElementById('rating-error');
+    const form = document.querySelector('#review-form');
+
+    function updateStars(value) {
+        stars.forEach((star, index) => {
+            star.innerHTML = index < value ? '★' : '☆';
+        });
+    }
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const value = star.getAttribute('data-value');
+            ratingInput.value = value;
+            updateStars(value);
+            ratingError.style.display = 'none';
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        if (!ratingInput.value) {
+            e.preventDefault();
+            ratingError.style.display = 'block';
+        } else {
+            ratingError.style.display = 'none';
+        }
+    });
+
+    updateStars(ratingInput.value || 0);
+</script>
+
+{% endblock %}
