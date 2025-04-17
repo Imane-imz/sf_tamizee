@@ -80,9 +80,9 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "php bin/console cache:clear",
-            "assets:install %PUBLIC_DIR%": "sphp bin/console assets:install %PUBLIC_DIR%",
-            "importmap:install": "php bin/console importmap:install"
+            "php bin/console cache:clear": "script",
+            "php bin/console assets:install %PUBLIC_DIR%": "script",
+            "php bin/console importmap:install": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"
