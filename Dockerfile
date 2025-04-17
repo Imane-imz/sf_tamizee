@@ -23,6 +23,9 @@ COPY . /var/www/html/
 # Donne les bons droits
 RUN chown -R www-data:www-data /var/www/html
 
+# Positionne le dossier de travail
+WORKDIR /var/www/html/
+
 # Installe les dépendances
 RUN composer install --no-dev --optimize-autoloader
 
