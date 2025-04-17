@@ -1,9 +1,8 @@
 services:
   - type: web
-    name: tamizee
-    env: docker
+    name: sf-tamizee
+    env: php
+    buildCommand: "./build.sh"
+    startCommand: "php -S 0.0.0.0:10000 -t public"
     plan: free
-    branch: main
-    dockerfilePath: ./Dockerfile
-    buildCommand: ""
-    startCommand: ""
+    phpVersion: 8.2
