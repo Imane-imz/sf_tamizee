@@ -1,4 +1,3 @@
-# Utilise une image PHP avec Composer et Apache préinstallés
 FROM php:8.2-apache
 
 # Installe les extensions nécessaires pour Symfony
@@ -24,9 +23,8 @@ COPY . /var/www/html/
 # Donne les bons droits
 RUN chown -R www-data:www-data /var/www/html
 
-# Installe les dépendances (et corrige les erreurs root + symfony/runtime)
-RUN composer install --no-dev --optimize-autoloader \
-    && composer require symfony/runtime
+# Installe les dépendances
+RUN composer install --no-dev --optimize-autoloader
 
 # Configuration Apache supplémentaire (permissions dossier public)
 RUN echo '<Directory /var/www/html/public>\n\
