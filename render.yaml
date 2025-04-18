@@ -3,3 +3,7 @@ services:
     name: sf-tamizee
     env: docker
     plan: free
+    region: frankfurt
+    dockerfilePath: Dockerfile
+    branch: main
+    autoDeploy: true
