@@ -1,36 +1,31 @@
 FROM php:8.2-cli
 
-# Installer des dépendances nécessaires
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    git \
-    unzip \
+    libzip-dev \
+    zip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd
+    && docker-php-ext-install gd pdo pdo_mysql zip
 
 # Installer Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copier l'application dans le conteneur
+# Définir le dossier de travail
 WORKDIR /var/www/html
+
+# Copier les fichiers PHP
 COPY . .
 
-# Modifier les permissions des fichiers
-RUN chown -R www-data:www-data /var/www/html
+# Installer les dépendances PHP dans le conteneur
+RUN composer install --no-dev --optimize-autoloader --prefer-dist
 
-# Installer les dépendances avec Composer
-RUN composer install --no-dev --optimize-autoloader --verbose
-
-# 🔧 Installer Symfony Runtime (nécessaire pour bin/console)
-RUN composer require symfony/runtime
-
-# Exécuter les autres commandes Symfony
-# RUN php bin/console cache:clear && php bin/console assets:install public
-
-# Définir le port d'écoute
+# Port utilisé par le serveur PHP
 EXPOSE 80
 
-# Démarrer le serveur PHP
+# Démarrer le serveur PHP intégré
 CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
