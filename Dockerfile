@@ -23,7 +23,10 @@ RUN chown -R www-data:www-data /var/www/html
 # Installer les dépendances avec Composer
 RUN composer install --no-dev --optimize-autoloader --verbose
 
-# Exécuter les autres commandes Symfony (par exemple, cache:clear)
+# 🔧 Installer Symfony Runtime (nécessaire pour bin/console)
+RUN composer require symfony/runtime
+
+# Exécuter les autres commandes Symfony
 RUN php bin/console cache:clear && php bin/console assets:install public
 
 # Définir le port d'écoute
