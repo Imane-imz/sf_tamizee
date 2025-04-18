@@ -1,21 +1,27 @@
 FROM php:8.2-apache
 
-# Installe les dépendances
+# Installe les extensions PHP nécessaires
 RUN apt-get update && apt-get install -y \
-    git zip unzip libicu-dev libonig-dev libxml2-dev curl \
-    && docker-php-ext-install intl pdo pdo_mysql opcache
+    git unzip libicu-dev libzip-dev zip libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install intl pdo pdo_mysql zip gd opcache
+
+# Active mod_rewrite
+RUN a2enmod rewrite
+
+# Configure Apache pour pointer vers /var/www/html/public
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+
+# Copie les fichiers dans le container
+COPY . /var/www/html/
+
+# Donne les bons droits
+RUN chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
 
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copie les fichiers de l'app
-COPY . /var/www/html/
-
-# Active le rewrite module d'Apache
-RUN a2enmod rewrite
-
-# Change le répertoire de travail
-WORKDIR /var/www/html/
-
-# Droits + nettoyage
-RUN chown -R www-data:www-data /var/www/html/ && chmod -R 755 /var/www/html/
+# Lance les commandes Symfony
+WORKDIR /var/www/html
+RUN composer install --no-dev --optimize-autoloader \
+    && php bin/console cache:clear \
+    && php bin/console assets:install public

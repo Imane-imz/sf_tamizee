@@ -3,6 +3,3 @@ services:
     name: sf-tamizee
     env: docker
     plan: free
-    dockerfilePath: ./Dockerfile
-    buildCommand: ""
-    startCommand: ""
