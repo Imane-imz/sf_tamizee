@@ -1,41 +1,33 @@
-# Utilisation de l'image PHP officielle
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Installe les dépendances nécessaires pour Composer et Symfony
+# Installer des dépendances nécessaires
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libzip-dev \
-    unzip \
     git \
+    unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_mysql
+    && docker-php-ext-install gd
 
-# Installe Composer
+# Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Définit le répertoire de travail
+# Copier l'application dans le conteneur
 WORKDIR /var/www/html
-
-# Copie le fichier composer.json et composer.lock
-COPY composer.json composer.lock ./
-
-# Installe les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
-
-# Copie tout le projet dans le conteneur
 COPY . .
 
-# Exécute les commandes Symfony
-RUN php bin/console cache:clear \
-    && php bin/console assets:install public
+# Modifier les permissions des fichiers
+RUN chown -R www-data:www-data /var/www/html
 
-# Déplace les droits après l'installation de Composer et la génération des dossiers
-RUN chown -R www-data:www-data var vendor
+# Installer les dépendances avec Composer
+RUN composer install --no-dev --optimize-autoloader --verbose
 
-# Définit le port d'écoute
-EXPOSE 9000
+# Exécuter les autres commandes Symfony (par exemple, cache:clear)
+RUN php bin/console cache:clear && php bin/console assets:install public
 
-# Lancer le serveur PHP intégré
-CMD ["php-fpm"]
+# Définir le port d'écoute
+EXPOSE 80
+
+# Démarrer le serveur PHP
+CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
