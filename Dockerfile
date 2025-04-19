@@ -1,5 +1,9 @@
 FROM php:8.2-cli
 
+# Définir les variables d’environnement
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
 # Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
@@ -16,16 +20,20 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copie d'abord composer.json et composer.lock
+# Copier les fichiers Composer d'abord
 COPY composer.json composer.lock ./
 
-# Installation des dépendances (après nettoyage + mise à jour)
+# Installer les dépendances PHP en production
 RUN composer install --no-dev --optimize-autoloader
 
-# Puis copie du reste du projet
+# Copier le reste du projet
 COPY . .
 
-# Commande de démarrage : migrations + serveur PHP
-CMD php bin/console doctrine:migrations:migrate --no-interaction && php -S 0.0.0.0:80 -t public
+# Commande de démarrage : afficher les extensions PHP, effectuer les migrations, vider le cache, puis lancer le serveur
+CMD php -m && \
+    php bin/console doctrine:migrations:migrate --no-interaction && \
+    php bin/console cache:clear --no-warmup && \
+    php -S 0.0.0.0:80 -t public
