@@ -29,5 +29,5 @@ RUN composer clear-cache \
 # Exposer le port utilisé par le serveur PHP
 EXPOSE 80
 
-# Démarrer le serveur PHP intégré
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+# Lancer les migrations puis le serveur PHP
+CMD bash -c "php bin/console doctrine:migrations:migrate --no-interaction && php -S 0.0.0.0:80 -t public"
