@@ -7,3 +7,10 @@ services:
     dockerfilePath: Dockerfile
     branch: main
     autoDeploy: true
+
+envVars:
+  - key: APP_ENV
+    value: prod
+  - key: APP_DEBUG
+    value: 0
+
