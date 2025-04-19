@@ -31,7 +31,7 @@ RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 RUN composer require symfony/runtime
 
 # Exécuter les autres commandes Symfony
-RUN php bin/console cache:clear && php bin/console assets:install public
+# RUN php bin/console cache:clear && php bin/console assets:install public
 
 # Exposer le port d'écoute
 EXPOSE 80
