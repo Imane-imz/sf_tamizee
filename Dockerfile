@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Installer les dépendances système et les extensions PHP nécessaires
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -16,17 +16,16 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier uniquement les fichiers de dépendances en premier (pour utiliser le cache Docker)
+# Copie d'abord composer.json et composer.lock
 COPY composer.json composer.lock ./
 
-# Installer les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader --prefer-dist
+# Installation des dépendances (après nettoyage + mise à jour)
+RUN composer install --no-dev --optimize-autoloader
 
-# Copier le reste du code du projet
+# Puis copie du reste du projet
 COPY . .
 
-# Lancer les migrations et le serveur
+# Commande de démarrage : migrations + serveur PHP
 CMD php bin/console doctrine:migrations:migrate --no-interaction && php -S 0.0.0.0:80 -t public
