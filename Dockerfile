@@ -9,10 +9,8 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libzip-dev \
     zip \
-    libonig-dev \
     libpq-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+    && docker-php-ext-install pdo pdo_pgsql zip gd
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -20,20 +18,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers de projet
-COPY . .
+# Copier les fichiers nécessaires pour l'installation
+COPY composer.json composer.lock ./
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader --prefer-dist
 
-# Assurer que symfony/runtime est installé
-RUN composer require symfony/runtime
+# Puis copier le reste
+COPY . .
 
-# Supprimer le DebugBundle du kernel en prod (sécurité en cas de fallback)
-RUN sed -i '/DebugBundle/d' config/bundles.php
-
-# Port utilisé par le serveur PHP
+# Exposer le port
 EXPOSE 80
 
-# Lancer le serveur PHP
+# Commande de lancement
 CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
