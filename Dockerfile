@@ -26,8 +26,9 @@ WORKDIR /var/www/html
 # Copier les fichiers Composer d'abord
 COPY composer.json composer.lock ./
 
-# Installer les dépendances PHP en production
-RUN composer install --no-dev --optimize-autoloader
+# Installer symfony/runtime et les dépendances en production
+RUN composer require symfony/runtime && \
+    composer install --no-dev --optimize-autoloader
 
 # Copier le reste du projet
 COPY . .
@@ -37,3 +38,5 @@ CMD php -m && \
     php bin/console doctrine:migrations:migrate --no-interaction && \
     php bin/console cache:clear --no-warmup && \
     php -S 0.0.0.0:80 -t public
+
+    
