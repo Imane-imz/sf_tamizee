@@ -19,15 +19,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers de projet
-COPY . .
+# Copier uniquement les fichiers de dépendances en premier (pour utiliser le cache Docker)
+COPY composer.json composer.lock ./
 
 # Installer les dépendances PHP
-RUN composer clear-cache \
-    && composer install --no-dev --optimize-autoloader --prefer-dist
+RUN composer install --no-dev --optimize-autoloader --prefer-dist
 
-# Exposer le port utilisé par le serveur PHP
-EXPOSE 80
+# Copier le reste du code du projet
+COPY . .
 
-# Lancer les migrations puis le serveur PHP
-CMD bash -c "php bin/console doctrine:migrations:migrate --no-interaction && php -S 0.0.0.0:80 -t public"
+# Lancer les migrations et le serveur
+CMD php bin/console doctrine:migrations:migrate --no-interaction && php -S 0.0.0.0:80 -t public
