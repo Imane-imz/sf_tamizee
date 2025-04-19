@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Installer les dépendances système
+# Installer les dépendances système et les extensions PHP nécessaires
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip gd
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_pgsql zip
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -18,17 +19,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers nécessaires pour l'installation
-COPY composer.json composer.lock ./
-
-# Installer les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader --prefer-dist
-
-# Puis copier le reste
+# Copier les fichiers de projet
 COPY . .
 
-# Exposer le port
+# Installer les dépendances PHP
+RUN composer install --optimize-autoloader --prefer-dist
+
+# Exposer le port utilisé par le serveur PHP
 EXPOSE 80
 
-# Commande de lancement
+# Démarrer le serveur PHP intégré
 CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
