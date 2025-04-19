@@ -23,7 +23,8 @@ WORKDIR /var/www/html
 COPY . .
 
 # Installer les dépendances PHP
-RUN composer install --optimize-autoloader --prefer-dist
+RUN composer clear-cache \
+    && composer install --no-dev --optimize-autoloader --prefer-dist
 
 # Exposer le port utilisé par le serveur PHP
 EXPOSE 80
