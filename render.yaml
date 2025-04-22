@@ -1,10 +1,9 @@
 services:
   - type: web
     name: sf_tamizee
-    env: php
+    env: docker
     buildCommand: |
-      curl -sS https://getcomposer.org/installer | php
-      php composer.phar install --no-dev --optimize-autoloader
-    startCommand: php -S 0.0.0.0:3000 -t public/
+      docker build -t sf_tamizee .
+    startCommand: docker run -p 10000:80 sf_tamizee
     envVars:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/sf_buy_buy_buy
