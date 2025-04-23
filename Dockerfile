@@ -3,7 +3,7 @@ FROM composer:latest AS vendor
 
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Étape 2 : Image finale avec PHP
 FROM php:8.2-cli
