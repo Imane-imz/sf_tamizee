@@ -22,9 +22,6 @@ class Product
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?int $price = null;
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
 
@@ -61,6 +58,9 @@ class Product
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'product')]
     private Collection $reviews;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $price = null;
+
     public function __construct()
     {
         $this->addProductHistories = new ArrayCollection();
@@ -94,18 +94,6 @@ class Product
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getPrice(): float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(int $price): static
-    {
-        $this->price = $price;
 
         return $this;
     }
@@ -274,6 +262,18 @@ class Product
                 $review->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }
