@@ -1,9 +1,12 @@
 services:
   - type: web
-    name: sf_tamizee
-    env: docker
-    buildCommand: |
-      docker build -t sf_tamizee .
-    startCommand: docker run -p 10000:80 sf_tamizee
+    name: symfony-app
+    env: php
+    buildCommand: "composer install && yarn install && yarn encore production"
+    startCommand: "php -S 0.0.0.0:10000 -t public"
+    plan: free
     envVars:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/sf_buy_buy_buy
+      - key: APP_ENV
+        value: prod
+      - key: APP_DEBUG
+        value: 0
