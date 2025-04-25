@@ -1,10 +1,9 @@
 services:
   - type: web
     name: symfony-app
-    env: php
-    buildCommand: "composer install && yarn install && yarn encore production"
-    startCommand: "php -S 0.0.0.0:10000 -t public"
+    env: docker
     plan: free
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
         value: prod

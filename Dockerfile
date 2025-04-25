@@ -1,35 +1,23 @@
-# Étape 1 : Builder les dépendances
-FROM composer:latest AS vendor
+# Étape 1 : base PHP avec Composer et Node
+FROM node:18-slim AS build
 
+# Installe PHP et Composer
+RUN apt-get update && \
+    apt-get install -y php php-cli php-mbstring php-xml php-curl php-sqlite3 unzip curl git && \
+    curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
+
+# Copie les fichiers et build les assets
 WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-
-# Étape 2 : Image finale avec PHP
-FROM php:8.2-cli
-
-# Installer les dépendances système PHP
-RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libjpeg-dev libfreetype6-dev libzip-dev zip libpq-dev \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo pdo_pgsql \
-    && apt-get clean
-
-# Copier Composer depuis l'étape précédente (facultatif si on n'a pas besoin de le réutiliser ensuite)
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/html
-
-# Copier le code source
 COPY . .
+RUN composer install --no-dev --optimize-autoloader
+RUN yarn install
+RUN yarn encore production
 
-# Copier les vendor depuis l'étape "vendor"
-COPY --from=vendor /app/vendor ./vendor
+# Étape 2 : serveur PHP pour production
+FROM php:8.2-cli
+WORKDIR /app
+COPY --from=build /app /app
 
-# Rendre git safe si besoin
-RUN git config --global --add safe.directory /var/www/html
-
-# Ne PAS faire `cache:clear` ici ! À faire uniquement dans le docker-compose ou dans l'entrypoint.sh
-
-# Commande de démarrage
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+EXPOSE 8080
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
