@@ -1,11 +1,11 @@
-$primary: #0B758C;
-$secondary: #54A1BF;
-$light : #C4E1F2;
-$info: #095573;
-$dark: #011C26;
-$success: #238C5B;
+$primary: #0B758C !default;
+$secondary: #54A1BF !default;
+$light : #C4E1F2 !default;
+$info: #095573 !default;
+$dark: #011C26 !default;
+$success: #238C5B !default;
 
-$font-family-sans-serif: 'Inter', sans-serif;
-$font-family-serif: 'Playfair Display', serif;
+$font-family-sans-serif: 'Inter', sans-serif !default;
+$font-family-serif: 'Playfair Display', serif !default;
 
 @import "~bootstrap/scss/bootstrap";

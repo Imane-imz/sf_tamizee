@@ -1,6 +1,7 @@
 // Styles SCSS/CSS
 import './styles/_custom.scss';
 import './styles/app.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 // Si tu veux Bootstrap :
 // import 'bootstrap/dist/js/bootstrap.bundle.min';
