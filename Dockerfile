@@ -1,45 +1,34 @@
 FROM php:8.2-fpm
 
-# Installer outils nécessaires
+# Installer tout ce qu'il faut
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libicu-dev \
-    libpq-dev \
-    libzip-dev \
-    zip \
-    curl \
+    git unzip curl libzip-dev libpq-dev libicu-dev \
     && docker-php-ext-install intl pdo pdo_pgsql zip
 
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Installer Node.js et Yarn
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install --global yarn
-
 # Définir le dossier de travail
 WORKDIR /app
 
-# --- Optimisation du cache Docker ---
-
-# 1. Copier uniquement les fichiers de dépendances
+# Copier les fichiers de dépendances
 COPY composer.json composer.lock symfony.lock* ./
-COPY package.json yarn.lock* ./
 
-# 2. Installer les dépendances PHP et JS (si les fichiers n'ont pas changé, Docker utilisera le cache)
+# Installer les dépendances PHP (ça va générer VENDOR)
 RUN composer install --no-dev --optimize-autoloader
-RUN yarn install
 
-# 3. Copier ensuite tout le projet (le code Symfony)
+# Copier le reste
 COPY . .
 
-# 4. Compiler les assets (JS/CSS)
-RUN yarn build
+# Installer NodeJS + Yarn + Assets
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install --global yarn && \
+    yarn install && \
+    yarn build
 
-# Exposer le port HTTP
+# Exposer le port
 EXPOSE 8000
 
-# Lancer le serveur Symfony en mode production
+# Lancer serveur PHP
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
