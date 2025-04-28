@@ -1,23 +1,32 @@
-# Étape 1 : base PHP avec Composer et Node
-FROM node:18-slim AS build
+# Utiliser une image PHP officielle
+FROM php:8.2-fpm
 
-# Installe PHP et Composer
-RUN apt-get update && \
-    apt-get install -y php php-cli php-mbstring php-xml php-curl php-sqlite3 unzip curl git && \
-    curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
+# Installer quelques outils nécessaires
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libicu-dev \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    && docker-php-ext-install intl pdo pdo_pgsql zip
 
-# Copie les fichiers et build les assets
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copier ton application
 WORKDIR /app
 COPY . .
+
+# Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
+
+# Installer les dépendances JS/CSS et compiler
 RUN yarn install
-RUN yarn encore production
+RUN yarn build
 
-# Étape 2 : serveur PHP pour production
-FROM php:8.2-cli
-WORKDIR /app
-COPY --from=build /app /app
+# Exposer le port (optionnel selon serveur utilisé)
+EXPOSE 8000
 
-EXPOSE 8080
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+# Commande pour démarrer Symfony (exemple avec PHP built-in server)
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
