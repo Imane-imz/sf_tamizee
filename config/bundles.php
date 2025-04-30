@@ -5,14 +5,16 @@ return [
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
-    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
-    Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
-    Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+
+    // Bundles dev/test conditionnels pour éviter les erreurs en production
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => class_exists(Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class) ? ['dev' => true, 'test' => true] : [],
+    Symfony\Bundle\MakerBundle\MakerBundle::class => class_exists(Symfony\Bundle\MakerBundle\MakerBundle::class) ? ['dev' => true] : [],
+    Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => class_exists(Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class) ? ['dev' => true, 'test' => true] : [],
 ];

@@ -13,15 +13,18 @@ if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
     throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
 }
 
-#!/usr/bin/env php
-
 require dirname(__DIR__).'/vendor/autoload.php';
 
+// Charge les variables d'environnement
 if (!isset($_SERVER['APP_ENV'])) {
     (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+    (new Dotenv())->loadEnv(dirname(__DIR__).'/.env.local');
 }
 
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+// Vérifie que les variables d'environnement APP_ENV et APP_DEBUG existent et attribue des valeurs par défaut si nécessaire
+$env = $_SERVER['APP_ENV'] ?? 'prod'; // 'prod' par défaut
+$debug = $_SERVER['APP_DEBUG'] ?? 'false'; // 'false' par défaut, en production
+
+$kernel = new Kernel($env, (bool) $debug);
 $application = new Application($kernel);
 $application->run();
-
