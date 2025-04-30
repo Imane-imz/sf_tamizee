@@ -1,4 +1,6 @@
 {
+    "name": "vendor/sf_tamizee",
+    "description": "Buy Buy Buy",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
