@@ -3,7 +3,7 @@
         'name' => 'vendor/sf_tamizee',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '1825235762b7b4cbd1929b1c909b09a901a14981',
+        'reference' => 'b9d2ba2ec15f1d3c784a5ecf288f3765f45f58c8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1412,7 +1412,7 @@
         'vendor/sf_tamizee' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '1825235762b7b4cbd1929b1c909b09a901a14981',
+            'reference' => 'b9d2ba2ec15f1d3c784a5ecf288f3765f45f58c8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
