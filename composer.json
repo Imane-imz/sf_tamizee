@@ -57,11 +57,6 @@
         "sort-packages": true,
         "platform": {
             "php": "8.2.0"
-        },
-        "platform-exts": {
-            "pdo_pgsql": "*",
-            "intl": "*",
-            "opcache": "*"
         }
     },
     "autoload": {
