@@ -7,6 +7,8 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
+        "ext-json": "*",
+        "ext-curl": "*",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -50,6 +52,7 @@
         "twig/twig": "^3.19.0"
     },
     "config": {
+        "composer-version": "2.2.0",
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
