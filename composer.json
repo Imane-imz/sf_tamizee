@@ -54,7 +54,15 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.0"
+        },
+        "platform-exts": {
+            "pdo_pgsql": "*",
+            "intl": "*",
+            "opcache": "*"
+        }
     },
     "autoload": {
         "psr-4": {
