@@ -7,7 +7,7 @@
 ```
 2 - Accéder au répertoire
 ```bash
-  cd repsoitories/sf_tamizee
+  cd repositories/sf_tamizee
 ```
 
 3 - Exécuter le script de déploiement
