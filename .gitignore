@@ -28,9 +28,11 @@
 /node_modules/
 /public/build/
 /public/uploads/
+/public/.htaccess
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /package-lock.json
 /yarn.lock
+/error_log
