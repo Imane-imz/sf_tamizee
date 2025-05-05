@@ -6,7 +6,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
-# /vendor/
+/vendor/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -28,8 +28,13 @@
 /node_modules/
 /public/build/
 /public/uploads/
+/public/.htaccess
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
+
 vendor/
+/package-lock.json
+/yarn.lock
+/error_logvendor/
