@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "🔁 Pulling latest code from Git..."
-git pull origin main
+git pull --rebase
 
 echo "📦 Installing frontend dependencies..."
 npm install --legacy-peer-deps
