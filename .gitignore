@@ -16,7 +16,6 @@
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
-/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/asset-mapper ###
@@ -33,10 +32,8 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-
-vendor/
 /package-lock.json
 /yarn.lock
-/error_logvendor/
+/error_log
 
 sf_tamizee_backup/
