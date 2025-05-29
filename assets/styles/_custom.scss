@@ -8,4 +8,4 @@ $success: #238C5B !default;
 $font-family-sans-serif: 'Inter', sans-serif !default;
 $font-family-serif: 'Playfair Display', serif !default;
 
-@import "~bootstrap/scss/bootstrap";
+@use "~bootstrap/scss/bootstrap";

@@ -20,7 +20,10 @@
                     <td>{{ category.name }}</td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{ path('app_category_update', {'id':category.id}) }}">Modifier</a> |
-                        <a onclick="return confirm('Confirmer la suppression ?')" class="btn btn-outline-danger" href="{{ path('app_category_delete', {'id':category.id}) }}">Supprimer</a>
+                        <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" style="display: inline-block;" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="btn btn-outline-danger">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
                 {% else %}

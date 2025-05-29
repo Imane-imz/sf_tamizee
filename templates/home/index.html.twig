@@ -10,7 +10,7 @@
         <h1 class="display-3 fw-bold">Buy Buy Buy</h1>
         <p class="lead">Vos envies, livrées chez vous.</p>
 
-        <a href="#" class="btn btn-primary btn-lg mt-3 disabled" tabindex="-1" aria-disabled="true">Voir nos produits</a>
+        <a href="{{ path('app_all_products') }}" class="btn btn-primary btn-lg mt-3" tabindex="-1">Voir nos produits</a>
 
     </div>
 </div>
@@ -60,7 +60,7 @@
 <div class="category-banner d-flex align-items-center text-white text-center">
     <div class="container content">
         <h1 class="display-3 fw-bold">Voir les produits par catégorie</h1>
-        <a href="#" class="btn btn-primary btn-lg mt-3 disabled" tabindex="-1" aria-disabled="true">Tout afficher</a>
+        <a href="{{ path('app_category_list') }}" class="btn btn-primary btn-lg mt-3" tabindex="-1">Tout afficher</a>
 
     </div>
 </div>

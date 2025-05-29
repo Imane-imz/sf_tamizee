@@ -1,6 +1,6 @@
 .hero-banner {
     position: relative;
-    background-image: url('../images/Sale.jpg'); /* Remplace par ton image */
+    background-image: url('../images/hero-scene.jpg'); /* Remplace par ton image */
     background-size: cover;
     background-position:top;
     background-repeat: no-repeat;
@@ -35,15 +35,35 @@
 }
 
 .category-banner {
-    background-image: url('../images/Avis.jpg'); /* Remplace par ton image */
+    position: relative;
+    background-image: url('../images/category-banner.jpg'); /* Remplace par ton image */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     min-height: 500px; /* Ajuste ici la hauteur selon ton goût */
 }
 
+.category-banner::after {
+    content: ''; /* Nécessaire pour afficher le pseudo-élément */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Couleur noire avec une transparence de 50% */
+    z-index: 1; /* Place l'overlay au-dessus de l'image */
+}
+
+.category-banner .content {
+    position: relative;
+    z-index: 2; /* Assure-toi que le texte reste au-dessus de l'overlay */
+    color: white; /* Pour rendre le texte blanc */
+    text-align: center;
+    padding: 20px;
+}
+
 .product-banner {
-    background-image: url('../images/Avis.jpg'); /* Remplace par ton image */
+    background-image: url('../images/category-banner.jpg'); /* Remplace par ton image */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -3,8 +3,8 @@
 {% block title %}Produits de la catégorie {{ category.name }}{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-    <h2>Produits dans la catégorie "{{ category.name }}"</h2>
+<div class="container py-5 text-center">
+    <h2 class="mb-5">{{ category.name }}</h2>
 
     <div class="row mt-4">
         {% for product in products %}

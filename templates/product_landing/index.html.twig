@@ -4,7 +4,7 @@
 
 {% block body %}
 {# Bannière produits #}
-<div class="product-banner d-flex align-items-center text-white text-center">
+<div class="category-banner d-flex align-items-center text-white text-center">
     <div class="container content">
         <h1 class="display-3 fw-bold">Boutique</h1>
     </div>
@@ -16,7 +16,7 @@
             <div class="col-md-3 mt-4">
                 <div class="card" style="width: 18rem;">
                     <a href="{{ path('app_product_page_show', {'id': product.id}) }}">
-                        <img src="{{ product.image }}" alt="{{ product.name }}" class="img-thumbnail">
+                        <img src="{{ asset('uploads/images/' ~ product.image) }}" alt="{{ product.name }}" class="img-thumbnail">
                     </a>
                     <div class="card-body">
                         <a class="product-title" href="{{ path('app_product_page_show', {'id': product.id}) }}">
